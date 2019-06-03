@@ -6,7 +6,7 @@ export class Category extends Component {
         const {item} = this.props
         if(item)
             return (
-                <View style={styles.container} >
+                <View style={{...styles.container,...this.props.style}} >
                     <TouchableOpacity onPress={() => this.props.navigate()} >
                     <Image source={{uri : item.category_pic || "http://lorempixel.com/150/150/"} } style={styles.image}  resizeMode='cover'/>
                     <View style={styles.textView}>

@@ -4,6 +4,7 @@ import {connect} from "react-redux"
 import Loading from "../components/Loading"
 import {fetchProfile} from "../actions/userActions"
 import {Icon} from "expo"
+
 export class ProfileScreen extends Component {
     static navigationOptions = {
         title: 'Profile',

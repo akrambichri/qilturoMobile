@@ -332,7 +332,7 @@ export const readBook = (article_id) => {
         return async dispatch => {
         const token =  await SecureStore.getItemAsync("token")
 
-            dispatch({type:ATTEMPT_REQUEST_USER})
+          dispatch({type:ATTEMPT_REQUEST_USER})
            await Api.post("texts/currentpage/"+article_id,{
             
                 token:token
@@ -352,9 +352,10 @@ export const readBook = (article_id) => {
 export const SUCCESS_GETNEXT_PAGE ="SUCCESS_GETNEXT_PAGE"
 export const FAILED_GETNEXT_PAGE  ="FAILED_GETNEXT_PAGE"
 
-export const getNextPage = (article_id,token=SecureStore.getItemAsync("token")) => {
+export const getNextPage = (article_id) => {
 
         return async dispatch => {
+            const token= await SecureStore.getItemAsync("token")
             dispatch({type:ATTEMPT_REQUEST_USER})
 
             await Api.post("texts/nextpage/"+
@@ -374,9 +375,10 @@ export const getNextPage = (article_id,token=SecureStore.getItemAsync("token")) 
 }
 
 export const SUCCESS_GETPREVIOUS_PAGE = "SUCCESS_GETPREVIOUS_PAGE"
-export const getPreviousPage = (article_id,token = SecureStore.getItemAsync("token")) => {
+export const getPreviousPage = (article_id) => {
 
     return async dispatch => {
+        const token= await SecureStore.getItemAsync("token")
         dispatch({type:ATTEMPT_REQUEST_USER})
         
         await Api.post("texts/previouspage/"+article_id,
@@ -622,8 +624,9 @@ export const resetPass= (token,password) => {
 export const FINISH_READING_USER ="FINISH_READING_USER"
 
 export const finishReading = ( article_id) => {
-    let token = SecureStore.getItemAsync("token")
     return async dispatch => {
+    let token = await SecureStore.getItemAsync("token")
+
         await Api.get("users/biblios/finish/"+article_id,
         {
            params:{ token,
@@ -642,8 +645,8 @@ export const finishReading = ( article_id) => {
 
 export const RATE_ARTICLE_USER ="RATE_ARTICLE_USER"
 export const rateArticle =(article_id,scoreF,scoreR,scoreA) => {
-   let token= SecureStore.getItemAsync("token")
     return async dispatch => {
+         let token= await SecureStore.getItemAsync("token")
         Api.defaults.headers.common['Authorization'] = "bearer " + token;
         await Api.post("/ratings",
         {

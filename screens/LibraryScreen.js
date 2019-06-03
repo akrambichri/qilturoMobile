@@ -50,11 +50,11 @@ class LibraryScreen extends React.Component {
         renderScene ={ ({ route }) => {
           switch (route.key) {
             case 'En Cours':
-              return this.props.loading?<Loading/>:<BookList data ={booksUnfinished}/>
+              return this.props.loading?<Loading/>:<BookList navigation={this.props.navigation} data ={booksUnfinished}/>
             case 'Terminer':
-              return this.props.loading?<Loading/>:<BookList data ={booksFinished}/>
+              return this.props.loading?<Loading/>:<BookList navigation={this.props.navigation} data ={booksFinished}/>
             case 'Tous':
-              return this.props.loading?<Loading/>:<BookList data ={books}/>
+              return this.props.loading?<Loading/>:<BookList navigation={this.props.navigation} data ={books}/>
             default:
               return null;
           }
@@ -85,7 +85,7 @@ const BookList = props =>
       renderItem={({item}) =>
               <ArticleCard 
                 article={item}
-                navigateToView = {() => this.props.navigation.navigate("Article",{article_id:item.id,name:item.book_name})}
+                navigateToView = {() => props.navigation.navigate("Article",{article_id:item.id,name:item.book_name})}
 
               />
           }

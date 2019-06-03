@@ -1,5 +1,6 @@
 import React from 'react'
 import {View, Image, StyleSheet, Dimensions,StatusBar,Text,TouchableOpacity } from "react-native"
+import {Tabs, Tab, TabHeading} from "native-base"
 import { TabView,TabBar,  } from 'react-native-tab-view';
 import {fetchOne} from "../actions/articleActions"
 import {connect} from "react-redux"
@@ -49,33 +50,14 @@ class ArticleViewScreen extends React.Component {
             </Text>
           </TouchableOpacity>
         </View>
-        <TabView
-        navigationState={this.state}
-        renderScene ={ ({ route }) => {
-          switch (route.key) {
-            case 'first':
-              return <SummaryRoute summary={article.description} />;
-            case 'second':
-              return <SecondRoute WITF={article.WITF} />;
-            default:
-              return null;
-          }
-        }}
-
-        onIndexChange={index => this.setState({ index })}
-        initialLayout={{ width: Dimensions.get('window').width }}
-        style={styles.container}
-        renderTabBar={props =>
-          <TabBar
-            {...props}
-            indicatorStyle={{ backgroundColor: "#043578" }}
-            style={{ backgroundColor: "white"}}
-            activeColor="#000"
-            inactiveColor="#000"
-          />
-        }
-        
-      />
+        <Tabs>
+          <Tab heading="Summary">
+             <SummaryRoute summary={article.description} />
+          </Tab>
+          <Tab heading={<TabHeading><Text>WITF</Text></TabHeading>}>
+            <SecondRoute WITF={article.WITF} />
+          </Tab>
+        </Tabs>
         </>
     )
     }

@@ -10,9 +10,11 @@ import SettingsScreen from '../screens/SettingsScreen';
 import ArticleViewScreen from "../screens/ArticleViewScreen"
 import ReadingScreen from "../screens/ReadingScreen"
 import ProfileScreen from "../screens/ProfileScreen"
+import ExploreScreen from "../screens/ExploreScreen"
+import RatingScreen from '../screens/RatingScreen';
 
 const HomeStack = createStackNavigator({
-  Home: categoriesScreen,
+  Home: ExploreScreen,
   
 });
 
@@ -35,11 +37,13 @@ const CategoriesStack = createStackNavigator({
   Articles:ArticlesScreen,
   Article:ArticleViewScreen,
   Reading:ReadingScreen,
+  Rating:RatingScreen,
 });
 
 CategoriesStack.navigationOptions = ({ navigation }) => {
+  let { routeName } = navigation.state.routes[navigation.state.index];
   return { 
-    tabBarVisible:navigation.state.index !== 3 , // 3 index of Reading
+    tabBarVisible:routeName !== "Reading" && routeName !== "Rating", 
     tabBarLabel: 'Categories',
     tabBarIcon: ({ focused }) => (
       <TabBarIcon

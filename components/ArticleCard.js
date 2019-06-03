@@ -25,7 +25,7 @@ class ArticleCard extends React.Component {
                     <Text style={styles.title} >{article.book_name}</Text>
                     <Text style={styles.description}>{article.description}</Text>
                     <TouchableOpacity onPress={() =>isInBiblio?this.props.removeArticleBiblio(article.id):this.props.addArticleBiblio(article.id)}>
-                        <Image source={require("../assets/images/add.png")} style={styles.addButton}/>
+                        <Image source={isInBiblio?require("../assets/images/remove.png"):require("../assets/images/add.png")} style={styles.addButton}/>
                     </TouchableOpacity>
                 </View>
         </TouchableOpacity>
@@ -34,18 +34,20 @@ class ArticleCard extends React.Component {
          return null;
         }
 }
+
 const styles = StyleSheet.create({
     container:{
-        flex:3,
         flexDirection:"row",
-        margin:5,
+        padding:5,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 1 },
         shadowOpacity: 0.8,
         shadowRadius: 2,  
         elevation: 5,
+        zIndex:2,
+        marginHorizontal:10
+        
     },
-
     image:{
         height:100,
         flex:1,
@@ -68,7 +70,10 @@ const styles = StyleSheet.create({
     addButton:{
         height:22,
         width:22,
-        marginLeft:"auto"
+        marginLeft:"auto",
+        borderRadius:25,
+        borderWidth:0.1,
+        borderColor:"#043578"
     }
 })
 const mapStateToProps = state => {
