@@ -1,9 +1,12 @@
 import React from 'react'
-import {View, Image, StyleSheet, Dimensions,StatusBar,Text,TouchableOpacity } from "react-native"
+import {View, Image, StyleSheet, ScrollView,StatusBar,Text,TouchableOpacity } from "react-native"
 import {Tabs, Tab, TabHeading} from "native-base"
 import { TabView,TabBar,  } from 'react-native-tab-view';
 import {fetchOne} from "../actions/articleActions"
 import {connect} from "react-redux"
+import { Audio,SecureStore } from 'expo';
+import {API_URL} from "../api"
+
 class ArticleViewScreen extends React.Component {
     componentDidMount(){
       const article_id = this.props.navigation.getParam("article_id");
@@ -17,6 +20,7 @@ class ArticleViewScreen extends React.Component {
           { key: 'second', title: 'WITF' },
         ],
       };
+      
       static navigationOptions = ({ navigation }) => {
         return {
             title: navigation.getParam("name"),
@@ -31,7 +35,20 @@ class ArticleViewScreen extends React.Component {
             }
           };
       };
-
+      handleAudio = async () => {
+        const article_id = this.props.navigation.getParam("article_id");
+        
+        const soundObject = new Audio.Sound();
+      try {
+        let token = await SecureStore.getItemAsync("token")
+        await soundObject.loadAsync({uri:API_URL+`/articles/getaudio/${article_id}?token=${token}`});
+        await soundObject.playAsync();
+        // Your sound is playing!
+      } catch (error) {
+        // An error occurred!
+        console.log(error)
+      }
+      }
     render(){
     let {article} = this.props;
     if(!article)
@@ -39,13 +56,24 @@ class ArticleViewScreen extends React.Component {
     else
       article=article[0]
     return (
-        <>
+        <ScrollView>
         <View style={styles.imgContainer}>
             <Image style={styles.image} source={{uri : "http://lorempixel.com/150/150/"} }/>
         </View>
+        <View style={styles.articleInfoContainer}>
+            <Text style={styles.articleInfoAuthor}>De Joi Pulizzi</Text>
+            <Text style={styles.articleInfoTitle}>{article.book_name}</Text>
+        </View>
         <View style={styles.actionsContainer}>
-          <TouchableOpacity rounded style={styles.btn} onPress={()=> this.props.navigation.navigate("Reading",{article_id:article.id})}  >
+        <TouchableOpacity rounded style={{...styles.btn,...styles.btnRadLeft}} onPress={()=> this.handleAudio()}  >
+        <Image style={{height:13,marginRight:5}} source={require("../assets/images/listen.png")}/>
             <Text style={{textAlign:"center",color:"white"}}>
+              Listen
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity rounded style={{...styles.btn,...styles.btnRadRight}} onPress={()=> this.props.navigation.navigate("Reading",{article_id:article.id})}  >
+           <Image style={{height:13,marginRight:5}} source={require("../assets/images/read.png")}/>
+            <Text style={{textAlign:"center",color:"#0854B3"}}>
               Read
             </Text>
           </TouchableOpacity>
@@ -54,11 +82,11 @@ class ArticleViewScreen extends React.Component {
           <Tab heading="Summary">
              <SummaryRoute summary={article.description} />
           </Tab>
-          <Tab heading={<TabHeading><Text>WITF</Text></TabHeading>}>
+          <Tab heading="WITF">
             <SecondRoute WITF={article.WITF} />
           </Tab>
         </Tabs>
-        </>
+        </ScrollView>
     )
     }
 }
@@ -75,6 +103,20 @@ const SecondRoute = (props) => (
   );
 
 const styles = StyleSheet.create({
+    articleInfoContainer:{
+        marginTop:30,
+        flexDirection:"column",
+        justifyContent:"center",
+        alignItems:"center"
+    },
+    articleInfoTitle:{
+      fontSize:18,
+      textAlign:"center"
+    },
+    articleInfoAuthor:{
+      textAlign:"center",
+      fontSize:14,
+    },
     imgContainer:{
         backgroundColor:"rgba(4, 53, 120, 0.1)",
         height:210,
@@ -86,8 +128,9 @@ const styles = StyleSheet.create({
         left:89,
         top:30,
         width:178,
-        height:239,
+        height:200,
         zIndex:1,
+        borderRadius:5
     },
     container: {
         marginTop: StatusBar.currentHeight,
@@ -109,19 +152,33 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.8,
         shadowRadius: 2,  
         elevation: 5,
-        marginLeft:"auto",
-        marginRight:"auto",
-        width:240.35,
+        width:140.35,
         height: 53.67,
-        padding:"auto",
+        flexDirection:"row",
         textAlign: 'center',
+        alignItems:"center",
         justifyContent: 'center',
-        margin:20,
-        borderRadius:25
+        marginVertical:20,
+      },
+      btnRadLeft:{
+        
+        borderTopLeftRadius:25,
+        borderBottomLeftRadius:25
+      },
+      btnRadRight:{
+        borderTopRightRadius:25,
+        borderBottomRightRadius:25,
+        backgroundColor:"#fff",
+        borderWidth:0.3,
+        borderColor:"#0854B3",
       },
       actionsContainer:{
-        marginTop:40,
-        padding:10
+        padding:5,
+        flexDirection:"row",
+        justifyContent:"center"
+      },
+      icon:{
+        height:"auto"
       }
 })
 

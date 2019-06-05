@@ -55,13 +55,16 @@ export class ExploreScreen extends Component {
                 </View>
             </View>
             <Text style={styles.header}>Les Populaires</Text>
+            <ArticleCard 
+                                    article={popular[0]}
+                                    navigateToView = {() => this.props.navigation.navigate("Article",{article_id:item.id,name:item.book_name})}
+                                 />
             <FlatList 
                      data={popular} 
                      renderItem={({item}) =>
                                  <ArticleCard 
                                     article={item}
                                     navigateToView = {() => this.props.navigation.navigate("Article",{article_id:item.id,name:item.book_name})}
-
                                  />
                               }
                      keyExtractor={(item, index) => index.toString()}

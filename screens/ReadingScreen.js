@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import {connect} from "react-redux"
 import {readBook,clearReading,getNextPage,getPreviousPage,addNote,finishReading,setReadDuration} from "../actions/userActions"
 import {addMsg} from "../actions/msgsActions"
-import {Text, ScrollView, StyleSheet, TouchableOpacity, View, Image, Platform} from "react-native"
+import {Text, ScrollView, StyleSheet, TouchableOpacity, View, Image, Platform, TextInput} from "react-native"
 import {Icon} from "expo"
 import Loading from "../components/Loading"
 
@@ -30,10 +30,12 @@ export class ReadingScreen extends Component {
     render() {
         let {reading} = this.props;
         let fin = false;
+        let titles=[]
         if(reading)
         {    
             reading = reading[0]
              fin = reading.page_number === reading.Max;
+             titles=reading.titles
         }
         else   
             return <Loading/>
@@ -43,9 +45,8 @@ export class ReadingScreen extends Component {
                 <Text style={this.state.nightMode?{...styles.title,color:"#fff"}:styles.title}>
                  {reading.title}
                 </Text>
-                <Text style={this.state.nightMode?{fontSize:this.state.fontSize,color:"#fff"}:{fontSize:this.state.fontSize}} >
-                 {reading.text}
-                </Text> 
+                <TextInput multiline selectable={true} editable={false} value={reading.text}  style={this.state.nightMode?{fontSize:this.state.fontSize,color:"#fff"}:{fontSize:this.state.fontSize}} />
+                 
                 
             </ScrollView>
             <View style={styles.toolBox}>
@@ -58,7 +59,7 @@ export class ReadingScreen extends Component {
                         /> 
                     </TouchableOpacity>
                    
-                    <TouchableOpacity style={styles.action} visible>
+                    <TouchableOpacity style={styles.action} onPress={()=>this.setState({showHeaders:!this.state.showHeaders})} >
                         <Image style={styles.actionImg} source={require("../assets/images/titles.png")}/>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.action} onPress={()=>this.setState({nightMode:!this.state.nightMode})}>
@@ -68,9 +69,10 @@ export class ReadingScreen extends Component {
                         <Image style={styles.actionImg} source={require("../assets/images/fontSize.png")}/>
                     </TouchableOpacity>           
                 </View>
-                <View style={styles.titles}>
-
-                </View>
+                {this.state.showHeaders &&
+                <View style={styles.headers} >
+                  {titles.map(title => <View style={styles.header}><Text> {title.page_number}</Text> <Text> {title.title}</Text> </View>)}
+                </View>}
                 <View style={this.state.nightMode?{...styles.footer,backgroundColor:"#0854B3"}:styles.footer}>
                    {reading.page_number !==1 &&
                     <TouchableOpacity style={styles.footerBtnPrev} onPress={() => this.props.getPreviousPage(this.state.id)}>
@@ -158,12 +160,18 @@ const styles = StyleSheet.create({
         marginRight:"auto",
         marginTop:"auto",
         marginBottom:"auto"
-      
     },
-    titles:{
+    headers:{
         ...StyleSheet.absoluteFill,
         width:"50%",
         height:"100%",
+        flexDirection:"column",
+        alignItems:"center",
+        justifyContent:"center",
+    },
+    header:{
+        flexDirection:"row",
+        justifyContent:"space-between"
     }
   });
 const mapStateToProps = state => {

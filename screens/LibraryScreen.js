@@ -1,6 +1,8 @@
 import React from 'react';
 import {View, Image, FlatList, StyleSheet, Dimensions,StatusBar,Text,TouchableOpacity } from "react-native"
 import { TabView,TabBar } from 'react-native-tab-view';
+import {Tab, Tabs } from 'native-base';
+
 import ArticleCard from "../components/ArticleCard"
 import {connect} from "react-redux"
 import {fetchBiblio} from "../actions/userActions"
@@ -45,35 +47,18 @@ class LibraryScreen extends React.Component {
      booksUnfinished = books.filter(x=> x.info.finished === 0)
       }
     return (
-       <TabView
-        navigationState={this.state}
-        renderScene ={ ({ route }) => {
-          switch (route.key) {
-            case 'En Cours':
-              return this.props.loading?<Loading/>:<BookList navigation={this.props.navigation} data ={booksUnfinished}/>
-            case 'Terminer':
-              return this.props.loading?<Loading/>:<BookList navigation={this.props.navigation} data ={booksFinished}/>
-            case 'Tous':
-              return this.props.loading?<Loading/>:<BookList navigation={this.props.navigation} data ={books}/>
-            default:
-              return null;
-          }
-        }}
-
-        onIndexChange={index => this.setState({ index })}
-        initialLayout={{ width: Dimensions.get('window').width }}
-        style={styles.container}
-        renderTabBar={props =>
-          <TabBar
-            {...props}
-            indicatorStyle={{ backgroundColor: "#043578" }}
-            style={styles.tabar}
-            activeColor="#000"
-            inactiveColor="#000"
-          />
-        }
-        
-      />
+        <Tabs style={{paddingTop:10}}>
+              <Tab heading="Tous" >
+              {this.props.loading?<Loading/>:<BookList navigation={this.props.navigation} data ={books}/>}
+              </Tab>
+              <Tab heading="En cours" >
+             { this.props.loading?<Loading/>:<BookList navigation={this.props.navigation} data ={booksUnfinished}/>}
+              </Tab>
+              <Tab heading="Terminer" >
+              {this.props.loading?<Loading/>:<BookList navigation={this.props.navigation} data ={booksFinished}/>}
+              </Tab>
+        </Tabs> 
+       
     );
   }
 }
@@ -113,7 +98,6 @@ const styles = StyleSheet.create({
     borderWidth:0.5,
     borderColor:"rgba(4, 53, 120, 1)",
     borderRadius:25,
-    margin:10
 
   },
   videContainer:{
