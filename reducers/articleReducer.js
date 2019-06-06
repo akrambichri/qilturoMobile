@@ -3,7 +3,9 @@ import {
     FETCH_ARTICLE_POPULAR,
     FETCH_ARTICLE_RATINGS,
     FETCH_ARTICLE_ONE,
-    SEARCH_ARTICLE
+    SEARCH_ARTICLE,
+    FETCH_SELECTED_ARTICLE,
+    FETCH_AUTHORS,
 } from "../actions/articleActions"
 
 export default (state= {articles:[],popular:[],search:[]},{type,payload}) => {
@@ -19,6 +21,10 @@ export default (state= {articles:[],popular:[],search:[]},{type,payload}) => {
                 return { ...state, show:payload}
             case SEARCH_ARTICLE:
                  return {...state,search:payload}
+            case FETCH_SELECTED_ARTICLE:
+                 return {...state,selected:payload[0]}
+            case FETCH_AUTHORS:
+                 return {...state,authors:payload}
             default:
                 return state;
 

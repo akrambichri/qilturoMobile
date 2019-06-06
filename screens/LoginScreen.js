@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Container, Header, Content,Toast , Form, Item, Icon, Input, Label, Title, Left, Body, Right,Text,Button } from 'native-base';
+import { Container, Header, Content,Toast , Form, Item, Icon, Input,Text,Button } from 'native-base';
 import {loginUser} from "../actions/userActions"
 import {StyleSheet, Image,View, TouchableOpacity} from "react-native"
 import Messages from "../HOCs/Messages"

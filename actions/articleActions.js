@@ -2,6 +2,7 @@
 import Api from "../api"
 import {addError} from "./errorsActions"
 import { stringify } from 'query-string'
+import { SecureStore } from 'expo';
 
 export const FETCH_ARTICLE_ATTEMPT = "FETCH_ARTICLE_ATTEMPT"
 export const FETCH_ARTICLE_ALL = "FETCH_ARTICLE_ALL"
@@ -119,3 +120,53 @@ export const search = cle => {
     }
 }
 
+
+export const FETCH_SELECTED_ARTICLE = "FETCH_SELECTED_ARTICLE"
+
+export const fetchSelectedArticle = () => {
+    return async dispatch => {
+        let query = {
+            page:1,
+            per_page:50,
+            selected:`1`
+        }
+        Api.get("/allarticles?"+stringify(query))
+        .then( resp =>
+            {dispatch(
+                {
+                    type: FETCH_SELECTED_ARTICLE,
+                    payload: resp.data.data.data
+                }
+                )
+           
+        }
+        ).catch(err =>{
+            dispatch(addError(err))
+        })
+    }
+}
+
+export const FETCH_AUTHORS ="FETCH_AUTHORS"
+
+export const fetchAuthors = () => {
+    return async dispatch => {
+        let  token =  await SecureStore.getItemAsync("token")
+        Api.defaults.headers.common['Authorization'] = "bearer " + token;
+        let query = {
+            page:1,
+            per_page:500,
+        }
+        Api.get("/auteurs?"+stringify(query))
+        .then( resp =>
+            {
+                dispatch({
+                    type: FETCH_AUTHORS,
+                    payload: resp.data.data.data
+                })
+                
+        }
+        ).catch(err =>{
+            dispatch(addError(err))
+        })
+    }
+}

@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import {View, StyleSheet, Text, FlatList, Image, TouchableOpacity,ScrollView } from "react-native"
 import {connect} from "react-redux"
-import {fetchAll,fetchPopular} from "../actions/articleActions"
 import {fetchCategories} from "../actions/categoryActions"
 import Category from "../components/Category"
 import ArticleCard from "../components/ArticleCard"
@@ -20,14 +19,12 @@ export class ExploreScreen extends Component {
           marginRight:"auto"
         }
       };
-      componentDidMount(){
-          if(!this.props.categories)
-             this.props.fetchCategories()
-          this.props.fetchPopular()
-      }
+
     render() {
-        const {categories} = this.props
-        const {popular} = this.props
+        const {categories, selected, popular,authors} = this.props
+        let auteur;
+        if(authors && selected)
+        auteur = authors.filter(aut => aut.id === selected.auteur_id)[0]
         return (
             <ScrollView>
                 <Text style={styles.header}>Les Categories</Text>
@@ -42,23 +39,21 @@ export class ExploreScreen extends Component {
                 />
                 :null
             }
-            <Text style={styles.header}>Notre Selection</Text>
+         { selected && <>
+           <Text style={styles.header}>Notre Selection</Text>
             <View style={styles.featuredContainer}>
                 <Image style={styles.imgFeatured} source={{uri:"http://lorempixel.com/150/150/"}} />
                 <View style={styles.featuredInfos}>
                     <Text >LE COUP DE COEUR DE LA SMAINE</Text>
-                    <Text style={styles.featuredTitle}>The Attention Revolution</Text>
-                    <Text style={styles.featuredAuteur}>Allen B. Wallence</Text>
-                    <TouchableOpacity style={styles.btnFeatured} >
-                        <Text style={styles.btnFeaturedText}>Decouvrir</Text>
+                    <Text style={styles.featuredTitle}>{selected.book_name}</Text>
+                    <Text style={styles.featuredAuteur}>{auteur&& auteur.name || "auteur introuvable !"}</Text>
+                    <TouchableOpacity style={styles.btnFeatured} onPress={() => this.props.navigation.navigate("Article",{article_id:selected.id,name:selected.book_name})} >
+                        <Text style={styles.btnFeaturedText} >Decouvrir</Text>
                     </TouchableOpacity>
                 </View>
-            </View>
+            </View></>}
             <Text style={styles.header}>Les Populaires</Text>
-            <ArticleCard 
-                                    article={popular[0]}
-                                    navigateToView = {() => this.props.navigation.navigate("Article",{article_id:item.id,name:item.book_name})}
-                                 />
+        
             <FlatList 
                      data={popular} 
                      renderItem={({item}) =>
@@ -126,7 +121,9 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => {
     return {
         popular:state.articles.popular,
-        categories:state.categories.categories
+        categories:state.categories.categories,
+        selected:state.articles.selected,
+        authors:state.articles.authors
     }
 }
-export default connect(mapStateToProps,{fetchPopular,fetchCategories})(ExploreScreen)
+export default connect(mapStateToProps)(ExploreScreen)

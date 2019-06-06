@@ -328,7 +328,7 @@ export const SUCCESS_READ_BOOK ="SUCCESS_READ_BOOK"
 export const FAILED_READ_BOOK ="FAILED_READ_BOOK"
 
 // AKA GET CURRENT PAGE
-export const readBook = (article_id) => { 
+export const readBook = (article_id) => {
         return async dispatch => {
         const token =  await SecureStore.getItemAsync("token")
 
@@ -342,7 +342,7 @@ export const readBook = (article_id) => {
                     payload:resp.data.data
                 })
             }).catch(err => {
-                dispatch(addError(err))
+                dispatch(addError("Erreur de Lecture de book"))
                 dispatch({type:FAILED_REQUEST_USER})
             })
 
@@ -531,11 +531,12 @@ export const verifyEmail = (email_token) => {
 
 export const CHANGE_EMAIL_USER ="CHANGE_EMAIL_USER"
 
-export const changeEmail= (email,token=SecureStore.getItemAsync("token"),oldpassword="") => {
+export const changeEmail= (oldpassword,email) => {
 
     return async dispatch => {
+        const token = await SecureStore.getItemAsync("token")
         dispatch({type:ATTEMPT_REQUEST_USER})
-        await Api.put("/users/profile",
+        await Api.post("/users/profile",
         {
             email,
             token,
@@ -554,16 +555,17 @@ export const changeEmail= (email,token=SecureStore.getItemAsync("token"),oldpass
 }
 export const CHANGE_PASSWORD_USER="CHANGE_PASSWORD_USER"
 
-export const changePass= (token=SecureStore.getItemAsync("token"),oldpassword,password,password_confirmation) => {
+export const changePass= (oldpassword,password) => {
 
     return async dispatch => {
+        const token= await SecureStore.getItemAsync("token")
         dispatch({type:ATTEMPT_REQUEST_USER})
-        await Api.put("/users/profile",
+        await Api.post("/users/profile",
         {
             token,
             oldpassword,
             password,
-            password_confirmation,
+            password_confirmation:password,
         })
         .then(resp => {
             dispatch({

@@ -1,5 +1,5 @@
 import React from 'react'
-import {Image, Button, TouchableOpacity, StyleSheet, View, Text} from "react-native"
+import {Image,  TouchableOpacity, StyleSheet, View, Text} from "react-native"
 import {connect} from "react-redux"
 import { addArticleBiblio,removeArticleBiblio,fetchBiblio } from '../actions/userActions';
 
@@ -9,12 +9,14 @@ class ArticleCard extends React.Component {
         if(!biblio || biblio.length === 0){
             this.props.fetchBiblio()
         }
+        
     }
     render(){
-    const {article} = this.props;
-    const {biblio} = this.props;
+    const {article,biblio, authors} = this.props;
     let isInBiblio = biblio.filter(book => book.id ===  article.id).length>0;
-
+    let auteur;
+    if(authors && article)
+     auteur = authors.filter(aut => aut.id === article.auteur_id)[0]
     if(article){
 
         return (
@@ -25,7 +27,7 @@ class ArticleCard extends React.Component {
                     <Text style={styles.title} >{article.book_name}</Text>
                     <Text style={styles.description}>{article.description}</Text>
                     <View style={styles.textFooter}>
-                    <Text style={styles.author}>{"mehdi"}</Text>
+                    <Text style={styles.author}>{auteur?auteur.auteur:"..."}</Text>
                     <TouchableOpacity onPress={() =>isInBiblio?this.props.removeArticleBiblio(article.id):this.props.addArticleBiblio(article.id)}>
                         <Image source={isInBiblio?require("../assets/images/remove.png"):require("../assets/images/add.png")} style={styles.addButton}/>
                     </TouchableOpacity>
@@ -41,31 +43,26 @@ class ArticleCard extends React.Component {
 const styles = StyleSheet.create({
     container:{
         flexDirection:"row",
-        padding:5,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.8,
-        shadowRadius: 2,  
-        elevation: 5,
         justifyContent: 'center',
         alignItems: 'center',
-        margin:5
+        margin:5,
+        padding: 5,
+        borderWidth:0.75,
+         borderColor:"#ccc",
+         borderRadius:5,
 
     },
     image:{
         height:100,
         flex:1,
         borderRadius:5,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.8,
-        shadowRadius: 2,  
+      
     },
     textContainer:{
         flexDirection:"column",
         flex:2,
         marginLeft:5,
-        alignItems:"stretch"
+        alignItems:"stretch",
     },
     title:{
         fontSize:14,
@@ -95,6 +92,7 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => {
     return {
         biblio:state.user.biblio,
+        authors:state.articles.authors
     }
 }
 export default connect(mapStateToProps,{ addArticleBiblio,removeArticleBiblio,fetchBiblio })(ArticleCard)

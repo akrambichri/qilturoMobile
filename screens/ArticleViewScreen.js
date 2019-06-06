@@ -49,6 +49,10 @@ class ArticleViewScreen extends React.Component {
         console.log(error)
       }
       }
+
+      handleRead = () => {
+        this.props.navigation.navigate("Reading",{article_id:article.id})
+      }
     render(){
     let {article} = this.props;
     if(!article)
@@ -71,7 +75,7 @@ class ArticleViewScreen extends React.Component {
               Listen
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity rounded style={{...styles.btn,...styles.btnRadRight}} onPress={()=> this.props.navigation.navigate("Reading",{article_id:article.id})}  >
+          <TouchableOpacity rounded style={{...styles.btn,...styles.btnRadRight}} onPress={()=>  this.props.navigation.navigate("Reading",{article_id:article.id})}  >
            <Image style={{height:13,marginRight:5}} source={require("../assets/images/read.png")}/>
             <Text style={{textAlign:"center",color:"#0854B3"}}>
               Read

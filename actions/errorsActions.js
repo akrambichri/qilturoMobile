@@ -1,4 +1,4 @@
-//import {logoutUser} from "./userActions";
+import {logoutUser} from "./userActions";
 
 export const ADD_ERROR ="ADD_ERROR";
 export const REMOVE_ERROR ="REMOVE_ERROR";
@@ -14,7 +14,7 @@ export const addError = error => {
     if(error.response)
     {    if(error.response.status === 401)
         {  
-            //dispatch(logoutUser())
+            dispatch(logoutUser())
         }
         if(error.response.status === 403)
         {  

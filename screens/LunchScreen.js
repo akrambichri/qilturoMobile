@@ -6,6 +6,9 @@ import {
   Image,
 } from 'react-native';
 import {SecureStore} from "expo"
+import {connect} from "react-redux"
+import {fetchPopular,fetchSelectedArticle,fetchAuthors} from "../actions/articleActions"
+import {fetchCategories} from "../actions/categoryActions"
 
 class LunchScreen extends React.Component {
   constructor(props) {
@@ -17,9 +20,13 @@ class LunchScreen extends React.Component {
   _bootstrapAsync = async () => {
     const userToken = await SecureStore.getItemAsync('token');
     console.log("lunch Screen!")
+    this.props.fetchCategories()
+    this.props.fetchPopular()
+    this.props.fetchSelectedArticle()
+    this.props.fetchAuthors()
     // This will switch to the App screen or Auth screen and this loading
     // screen will be unmounted and thrown away.
-    setTimeout(() =>this.props.navigation.navigate(userToken ? 'Home' : 'Auth'),2000)
+    this.props.navigation.navigate(userToken ? 'Home' : 'Auth')
   };
 
   render() {
@@ -50,4 +57,4 @@ const styles = StyleSheet.create({
   
 })
 
-export default LunchScreen
+export default connect(null,{fetchPopular,fetchCategories,fetchSelectedArticle,fetchAuthors})(LunchScreen)

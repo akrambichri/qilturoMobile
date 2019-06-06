@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
-import {View, TouchableOpacity, Button, Text, StyleSheet, Platform} from "react-native"
+import {View, TouchableOpacity, Text, StyleSheet, Platform,ScrollView} from "react-native"
 import {connect} from "react-redux"
 import Loading from "../components/Loading"
 import {fetchProfile} from "../actions/userActions"
 import {Icon} from "expo"
-
+import Form from "../components/Form"
 export class ProfileScreen extends Component {
     static navigationOptions = {
         title: 'Profile',
@@ -29,48 +29,58 @@ export class ProfileScreen extends Component {
             return <Loading/>
         else
         return (
-            <View>
-                <Option value={profile.email} >
+            <ScrollView>
+                <Option value={profile.email} element="email" >
                     E-mail
                 </Option>
                 <Option value={profile.name} >
                     Nom
                 </Option>
-                <Option value={"***********"} >
+                <Option value={"***********"}  element="password">
                     Mot de pass
                 </Option>
                 <Option noIcon={true} value={profile.roles[0].name} >
                    Abonnement
                 </Option>
-            </View>
+            </ScrollView>
         )
     }
 }
-const Option = (props) => (
-    <TouchableOpacity onPress={() => props.onPress?props.onPress():null} style={styles.option}>
-      <Text style={{...styles.optionText,color:props.color}}>
-        {props.children}
-      </Text>
-     
-     <View style={{flexDirection:"row"}} >
-         <Text style={{...styles.optionImg,marginRight:5}}>
-             {props.value}
-         </Text>
-         {props.noIcon?null:
-      <Icon.Ionicons
-          name={Platform.OS === 'ios' ? 'ios-arrow-forward' : 'md-arrow-forward'}
-          size={18}
-          style={styles.optionImg}
-          color="#444" 
-          />}
-     </View>
-          
-    </TouchableOpacity>
-  )
+class Option extends React.Component {
+  state= {
+    showForm:false,
+  }
+    render(){
+      return (
+    <View style={{formDirection:"column"}}>
+        <TouchableOpacity onPress={() => this.setState({showForm:!this.state.showForm})} style={styles.option}>
+          <Text style={{...styles.optionText,color:this.props.color}}>
+            {this.props.children}
+          </Text>
+        
+        <View style={{flexDirection:"row"}} >
+            <Text style={{...styles.optionImg,marginRight:5}}>
+                {this.props.value}
+            </Text>
+            {this.props.noIcon?null:
+          <Icon.Ionicons
+              name={Platform.OS === 'ios' ? 'ios-arrow-forward' : 'md-arrow-forward'}
+              size={18}
+              style={styles.optionImg}
+              color="#444" 
+              />}
+        </View>     
+        </TouchableOpacity>
+        {this.state.showForm && this.props.element&&
+        <Form element={this.props.element} hide={() => this.setState({showForm:false})}/>
+        }
+      </View>
+    )}
+}
+
 
   const styles = StyleSheet.create({
     option:{
-      
       width:"100%",
       height:60,
       flexDirection:"row",
@@ -87,7 +97,6 @@ const Option = (props) => (
         marginTop:"auto",
         marginBottom:"auto",
     },
-  
   })
 const mapStateToProps = state => {
     return {

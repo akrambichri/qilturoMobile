@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import {connect} from "react-redux"
 import {readBook,clearReading,getNextPage,getPreviousPage,addNote,finishReading,setReadDuration} from "../actions/userActions"
 import {addMsg} from "../actions/msgsActions"
-import {Text, ScrollView, StyleSheet, TouchableOpacity, View, Image, Platform, TextInput} from "react-native"
+import {Text, ScrollView, StyleSheet,Keyboard, TouchableOpacity, View, Image, Platform, TextInput} from "react-native"
 import {Icon} from "expo"
 import Loading from "../components/Loading"
 
@@ -45,7 +45,11 @@ export class ReadingScreen extends Component {
                 <Text style={this.state.nightMode?{...styles.title,color:"#fff"}:styles.title}>
                  {reading.title}
                 </Text>
-                <TextInput multiline selectable={true} editable={false} value={reading.text}  style={this.state.nightMode?{fontSize:this.state.fontSize,color:"#fff"}:{fontSize:this.state.fontSize}} />
+                <Text 
+                selectable={true}  
+                value={reading.text}
+                style={this.state.nightMode?{fontSize:this.state.fontSize,color:"#fff"}:{fontSize:this.state.fontSize}}
+                 />
                  
                 
             </ScrollView>
@@ -65,14 +69,21 @@ export class ReadingScreen extends Component {
                     <TouchableOpacity style={styles.action} onPress={()=>this.setState({nightMode:!this.state.nightMode})}>
                         <Image style={styles.actionImg} source={require("../assets/images/night.png")}/>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.action} onPress={() => {let font = this.state.fontSize; this.setState({fontSize:font === 26?20:font+3})} } >
+                    <TouchableOpacity style={styles.action} onPress={() => {let font = this.state.fontSize; this.setState({fontSize:font === 26 ? 20:font+3})} } >
                         <Image style={styles.actionImg} source={require("../assets/images/fontSize.png")}/>
                     </TouchableOpacity>           
                 </View>
                 {this.state.showHeaders &&
-                <View style={styles.headers} >
-                  {titles.map(title => <View style={styles.header}><Text> {title.page_number}</Text> <Text> {title.title}</Text> </View>)}
-                </View>}
+                <View style ={styles.headersContainer} onPress={()=> console.log("xx")}>
+                    <View style={styles.headers}>
+                    {titles.map(title => 
+                    <View key={title.page_number} style={styles.header}>
+                        <Text style={{marginHorizontal:5}}>{title.page_number}</Text>
+                        <Text style={{marginHorizontal:5}}>{title.title}</Text>
+                    </View>)}
+                    </View>
+                </View>
+                }
                 <View style={this.state.nightMode?{...styles.footer,backgroundColor:"#0854B3"}:styles.footer}>
                    {reading.page_number !==1 &&
                     <TouchableOpacity style={styles.footerBtnPrev} onPress={() => this.props.getPreviousPage(this.state.id)}>
@@ -110,8 +121,7 @@ const styles = StyleSheet.create({
         textAlign:"center"
     },
     body:{
-        
-        
+  
     },
     footer:{
         height:"5%",
@@ -148,6 +158,7 @@ const styles = StyleSheet.create({
         backgroundColor:"white",
         flex:1,
         flexDirection:"column",
+        zIndex:5,
     },
     
     action:{
@@ -162,16 +173,33 @@ const styles = StyleSheet.create({
         marginBottom:"auto"
     },
     headers:{
-        ...StyleSheet.absoluteFill,
-        width:"50%",
+        width:"70%",
         height:"100%",
         flexDirection:"column",
         alignItems:"center",
         justifyContent:"center",
+        backgroundColor:"#fff",
+        padding:5,
+        elevation:5,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.5,
+        shadowRadius: 2,
     },
     header:{
         flexDirection:"row",
-        justifyContent:"space-between"
+        marginVertical:10,
+        padding:5,
+    },
+    headersContainer:{
+        ...StyleSheet.absoluteFill,
+        width:"100%",
+        height:"100%",
+        backgroundColor:"rgba(0,0,0,0.3)",
+        zIndex:2,
+    },
+    headermarg:{
+        marginHorizontal:10
     }
   });
 const mapStateToProps = state => {
