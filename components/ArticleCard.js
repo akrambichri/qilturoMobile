@@ -47,9 +47,13 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         margin:5,
         padding: 5,
-        borderWidth:0.75,
-         borderColor:"#ccc",
-         borderRadius:5,
+
+        borderRadius:5,
+        elevation:3,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.5,
+         backgroundColor:"#fff"
 
     },
     image:{

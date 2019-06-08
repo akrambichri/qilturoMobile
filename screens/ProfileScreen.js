@@ -22,6 +22,11 @@ export class ProfileScreen extends Component {
       componentDidMount(){
         if(!this.props.profile)
             this.props.fetchProfile()
+        console.log("ProfileScreen mounting...")
+      }
+    
+      componentWillUnmount(){
+        console.log("ProfileScreen unmounting...")
       }
     render() {
         const {profile} = this.props;

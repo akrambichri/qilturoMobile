@@ -5,7 +5,7 @@ export class Subscribe extends Component {
         return (
             <View style={styles.container}>
                 <View  style={styles.space}/>
-                <TouchableOpacity style={styles.button}>
+                <TouchableOpacity style={styles.button} onPress={()=> this.props.onPress()} >
                     <Image style={styles.img} source={require("../assets/images/logo.png")} />
                     <View style={styles.textContainer}>
                         <Text style={styles.textHeader}>

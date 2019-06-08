@@ -23,18 +23,18 @@ class SettingsScreen extends React.Component {
   render() {
    return(
      <View>
-          <Subscribe/>
+          <Subscribe onPress={()=> this.props.navigation.navigate("Subscription")}/>
           <Option onPress={() => this.props.navigation.navigate("Profile")}>
             Mon Compte
           </Option>
-          <Option>
-            Langue
+          <Option  onPress={() => this.props.navigation.navigate("Langues")}>
+            Langue de l'Application
           </Option>
-          <Option>
+          <Option onPress={() => this.props.navigation.navigate("CG")}>
             Conditions Generales
           </Option>
-          <Option>
-            Contactez le support
+          <Option onPress={() => this.props.navigation.navigate("Notes")}>
+            Notes
           </Option>
           
           <Option color="red" noIcon={true} onPress={() =>this.props.logoutUser()}>

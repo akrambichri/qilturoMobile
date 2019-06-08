@@ -9,9 +9,13 @@ import {API_URL} from "../api"
 
 class ArticleViewScreen extends React.Component {
     componentDidMount(){
+      console.log("ArticleViewScreen mounting...")
       const article_id = this.props.navigation.getParam("article_id");
       if(article_id)
         this.props.fetchOne(article_id)
+    }
+    componentWillUnmount(){
+      console.log("ArticleViewScreen unmounting...")
     }
     state = {
         index: 0,
@@ -54,18 +58,22 @@ class ArticleViewScreen extends React.Component {
         this.props.navigation.navigate("Reading",{article_id:article.id})
       }
     render(){
-    let {article} = this.props;
+    let {article,authors} = this.props;
+    
     if(!article)
         return null;
-    else
+    else {
       article=article[0]
+      let auteur;
+      if(authors && article)
+       auteur = authors.filter(aut => aut.id === article.auteur_id)[0]
     return (
         <ScrollView>
         <View style={styles.imgContainer}>
             <Image style={styles.image} source={{uri : "http://lorempixel.com/150/150/"} }/>
         </View>
         <View style={styles.articleInfoContainer}>
-            <Text style={styles.articleInfoAuthor}>De Joi Pulizzi</Text>
+            <Text style={styles.articleInfoAuthor}>{auteur&&auteur.auteur || "auteur introubable!"}</Text>
             <Text style={styles.articleInfoTitle}>{article.book_name}</Text>
         </View>
         <View style={styles.actionsContainer}>
@@ -82,16 +90,30 @@ class ArticleViewScreen extends React.Component {
             </Text>
           </TouchableOpacity>
         </View>
-        <Tabs>
-          <Tab heading="Summary">
+        <Tabs tabContainerStyle={{backgroundColor:"#fff",borderRadius:25}}
+              tabBarUnderlineStyle={{width:0}}>
+          <Tab 
+          activeTabStyle={{...styles.activeTabStyle,...styles.borderLeft}}
+          tabStyle={{...styles.tab,...styles.borderLeft}}
+           textStyle={styles.textStyle}
+         
+           activeTextStyle={styles.activeTextStyle}
+
+          heading="Summary">
              <SummaryRoute summary={article.description} />
           </Tab>
-          <Tab heading="WITF">
+          <Tab
+          activeTabStyle={{...styles.activeTabStyle,...styles.borderRight}}
+          tabStyle={{...styles.tab,...styles.borderRight}}
+           textStyle={styles.textStyle}
+           activeTextStyle={styles.activeTextStyle}
+          heading="WITF">
             <SecondRoute WITF={article.WITF} />
           </Tab>
         </Tabs>
         </ScrollView>
     )
+  }
     }
 }
 const SummaryRoute = (props) => (
@@ -107,6 +129,30 @@ const SecondRoute = (props) => (
   );
 
 const styles = StyleSheet.create({
+  tabs:{
+    borderColor:"#043578",
+    borderWidth:1,
+    backgroundColor:"#fff"
+},
+tab:{
+  borderColor:"#043578",
+  borderWidth:1,
+  backgroundColor:"#fff"
+  
+},
+textStyle:{
+  color:"#043578"
+},
+activeTabStyle:{
+  borderColor:"#043578",
+  borderWidth:1,
+  backgroundColor:"#043578"
+  
+},
+activeTextStyle:{
+  color:"#fff"
+},
+
     articleInfoContainer:{
         marginTop:30,
         flexDirection:"column",
@@ -150,7 +196,7 @@ const styles = StyleSheet.create({
         fontSize:16
       },
       btn:{
-        backgroundColor:"#0854B3",
+        backgroundColor:"#043578",
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 1 },
         shadowOpacity: 0.8,
@@ -183,13 +229,22 @@ const styles = StyleSheet.create({
       },
       icon:{
         height:"auto"
+      },
+      borderRight:{
+        borderTopRightRadius:25,
+        borderBottomRightRadius:25,
+      },
+      borderLeft:{
+        borderTopLeftRadius:25,
+        borderBottomLeftRadius:25,
       }
 })
 
 
 const mapStateToProps = state => {
   return {
-    article:state.articles.show
+    article:state.articles.show,
+    authors:state.articles.authors
   }
 }
 export default connect(mapStateToProps,{fetchOne})(ArticleViewScreen)

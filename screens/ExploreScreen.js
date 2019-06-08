@@ -19,6 +19,13 @@ export class ExploreScreen extends Component {
           marginRight:"auto"
         }
       };
+      componentDidMount(){
+        console.log("ExploreScreen mounting...")
+      }
+      componentWillUnmount(){
+        console.log("ExploreScreen unmounting...")
+      }
+      
 
     render() {
         const {categories, selected, popular,authors} = this.props

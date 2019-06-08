@@ -32,7 +32,8 @@ import {
     FETCH_LEVELS_USER,
     UNPARTICIPATE_EVENT_USER,
     SET_KINDLE_EMAIL,
-    SET_EVERNOTE_EMAIL
+    SET_EVERNOTE_EMAIL,
+    FAILED_SUBSCRIPTION
 
 } from "../actions/userActions"
 import { SecureStore } from 'expo';
@@ -69,7 +70,10 @@ export default (state = USER_INIT , {type,payload}) => {
         case FAILED_REQUEST_USER:
             return {...state,loading:false}
         case SUBSCRIPTION_SUCCESS :
-            return {...state,subscription:payload,loading:false}
+            return {...state,subscription:payload,loading:false,success:true}
+        case FAILED_SUBSCRIPTION:{
+            return {...state,loading:false,success:false}
+        }
         case SUCCESS_READ_BOOK:
             return {...state,reading:payload,loading:false}
         case SUCCESS_GETNEXT_PAGE:

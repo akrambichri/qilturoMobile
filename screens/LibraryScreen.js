@@ -1,8 +1,7 @@
 import React from 'react';
 import {View, Image, FlatList, StyleSheet, Dimensions,StatusBar,Text,TouchableOpacity } from "react-native"
-import { TabView,TabBar } from 'react-native-tab-view';
-import {Tab, Tabs } from 'native-base';
 
+import  {Tab,Tabs,TabHeading} from 'native-base';
 import ArticleCard from "../components/ArticleCard"
 import {connect} from "react-redux"
 import {fetchBiblio} from "../actions/userActions"
@@ -35,7 +34,14 @@ class LibraryScreen extends React.Component {
   componentDidMount() {
     if(this.props.biblio.length === 0)
       this.props.fetchBiblio()
+      console.log("LibraryScreen mounting...")
   }
+
+
+  componentWillUnmount(){
+    console.log("LibraryScreen unmounting...")
+  }
+
   render() {
     const books = this.props.biblio;
     let booksFinished = []
@@ -47,14 +53,31 @@ class LibraryScreen extends React.Component {
      booksUnfinished = books.filter(x=> x.info.finished === 0)
       }
     return (
-        <Tabs style={{paddingTop:10}}>
-              <Tab heading="Tous" >
+        <Tabs  tabContainerStyle={{backgroundColor:"#fff",borderRadius:25}}
+              tabBarUnderlineStyle={{width:0}}
+        >
+              <Tab 
+                textStyle={styles.textStyle}
+                activeTabStyle={{...styles.activeTabStyle,...styles.borderLeft}}
+                tabStyle={{...styles.tab,...styles.borderLeft}}
+                activeTextStyle={styles.activeTextStyle}
+               heading="Tous">
               {this.props.loading?<Loading/>:<BookList navigation={this.props.navigation} data ={books}/>}
               </Tab>
-              <Tab heading="En cours" >
+              <Tab 
+                textStyle={styles.textStyle}
+                activeTabStyle={styles.activeTabStyle}
+                activeTextStyle={styles.activeTextStyle}
+                tabStyle={styles.tab} 
+                heading="En cours" >
              { this.props.loading?<Loading/>:<BookList navigation={this.props.navigation} data ={booksUnfinished}/>}
               </Tab>
-              <Tab heading="Terminer" >
+              <Tab 
+                textStyle={styles.textStyle}
+                activeTabStyle={{...styles.activeTabStyle,...styles.borderRight}}
+                activeTextStyle={styles.activeTextStyle}
+                tabStyle={{...styles.tab,...styles.borderRight}}
+                heading="Terminer" >
               {this.props.loading?<Loading/>:<BookList navigation={this.props.navigation} data ={booksFinished}/>}
               </Tab>
         </Tabs> 
@@ -93,13 +116,31 @@ const styles = StyleSheet.create({
     paddingTop: 15,
     backgroundColor: '#fff',
   },
-  tabar:{
-    backgroundColor:"#fff",
-    borderWidth:0.5,
-    borderColor:"rgba(4, 53, 120, 1)",
-    borderRadius:25,
 
+    tabs:{
+      borderColor:"#043578",
+      borderWidth:1,
+      backgroundColor:"#fff"
   },
+  tab:{
+    borderColor:"#043578",
+    borderWidth:1,
+    backgroundColor:"#fff"
+    
+  },
+  textStyle:{
+    color:"#043578"
+  },
+  activeTabStyle:{
+    borderColor:"#043578",
+    borderWidth:1,
+    backgroundColor:"#043578"
+    
+  },
+  activeTextStyle:{
+    color:"#fff"
+  },
+
   videContainer:{
     height:"100%",
     width:"100%",
@@ -114,6 +155,14 @@ const styles = StyleSheet.create({
   videText:{
     fontSize:19,
     margin:5
+  },
+  borderRight:{
+    borderTopRightRadius:25,
+    borderBottomRightRadius:25,
+  },
+  borderLeft:{
+    borderTopLeftRadius:25,
+    borderBottomLeftRadius:25,
   }
 
 });

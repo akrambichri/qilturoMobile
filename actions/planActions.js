@@ -11,13 +11,11 @@ export const fetchallPlans = () => {
         })
         Api.get("/plans")
            .then(resp => {
-               console.log(resp.data.data)
                dispatch({
                    type:FETCH_ALL_PLANS,
                    payload:resp.data.data.data
                 })
            }).catch( err => {
-               console.log(err)
                 dispatch(addError(err))            
            }
            )

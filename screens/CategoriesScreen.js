@@ -18,6 +18,12 @@ import {fetchCategories} from "../actions/categoryActions"
 
   componentDidMount(){
     this.props.fetchCategories()
+    console.log("categoriesScreen mounting...")
+
+  }
+
+  componentWillUnmount(){
+    console.log("categoriesScreen unmounting...")
   }
 
   static navigationOptions = {

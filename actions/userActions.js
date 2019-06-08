@@ -256,10 +256,11 @@ export const removeArticleBiblio = ( id) => {
 }
 
 export const SUBSCRIPTION_SUCCESS ="SUBSCRIPTION_SUCCESS"
+export const FAILED_SUBSCRIPTION ="FAILED_SUBSCRIPTION"
+export const subscribe = (planID,stripeToken) => {
 
-export const subscribe = (planID,stripeToken,token=SecureStore.getItemAsync("token")) => {
-
-    return dispatch => {
+    return  async dispatch => {
+        let token= await SecureStore.getItemAsync("token")
         dispatch({
             type:ATTEMPT_REQUEST_USER
         })
@@ -268,18 +269,15 @@ export const subscribe = (planID,stripeToken,token=SecureStore.getItemAsync("tok
             token:token,
             plan_id:planID
         }).then( resp => {
-            console.log(resp)
             dispatch({
                 type:SUBSCRIPTION_SUCCESS,
                 payload:planID
             })
-            //history.push("/sucess_subscription")
+            
             
         }).catch( err => {
-            console.log(err.response)
-            dispatch(addError(err))
-            dispatch({type:FAILED_REQUEST_USER,})
-            //history.push("/failure_subscription")
+           
+            dispatch({type:FAILED_SUBSCRIPTION,})
         })
     }
 }

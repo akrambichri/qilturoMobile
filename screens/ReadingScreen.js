@@ -47,9 +47,10 @@ export class ReadingScreen extends Component {
                 </Text>
                 <Text 
                 selectable={true}  
-                value={reading.text}
                 style={this.state.nightMode?{fontSize:this.state.fontSize,color:"#fff"}:{fontSize:this.state.fontSize}}
-                 />
+                 >
+                {reading.text}
+                 </Text>
                  
                 
             </ScrollView>

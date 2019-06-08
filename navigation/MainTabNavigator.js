@@ -12,6 +12,10 @@ import ReadingScreen from "../screens/ReadingScreen"
 import ProfileScreen from "../screens/ProfileScreen"
 import ExploreScreen from "../screens/ExploreScreen"
 import RatingScreen from '../screens/RatingScreen';
+import CGScreen from '../screens/CGScreen';
+import LanguesScreen from '../screens/LanguesScreen';
+import NotesScreen from '../screens/NotesScreen';
+import SubscriptionScreen from "../screens/SubscriptionScreen"
 
 const HomeStack = createStackNavigator({
   Home: ExploreScreen,
@@ -59,6 +63,7 @@ CategoriesStack.navigationOptions = ({ navigation }) => {
 
 const LibraryStack = createStackNavigator({
   Library: LibraryScreen,
+  Notes:NotesScreen,
 });
 
 LibraryStack.navigationOptions = {
@@ -74,6 +79,9 @@ LibraryStack.navigationOptions = {
 const SettingsStack = createStackNavigator({
   Settings: SettingsScreen,
   Profile: ProfileScreen,
+  CG:CGScreen,
+  Langues:LanguesScreen,
+  Subscription:SubscriptionScreen
 });
 
 SettingsStack.navigationOptions = {

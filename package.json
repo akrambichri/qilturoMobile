@@ -18,6 +18,7 @@
     "react": "16.5.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-32.0.0.tar.gz",
     "react-native-selectable-text": "^1.0.2",
+    "react-native-stripe-api": "^0.1.0",
     "react-native-tab-view": "^2.5.0",
     "react-navigation": "^3.0.9",
     "react-redux": "^6.0.1",

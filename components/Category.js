@@ -27,6 +27,13 @@ const styles = StyleSheet.create( {
             marginBottom:10,
             marginLeft:"auto",
             marginRight:"auto",
+            backgroundColor:"#fff",
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.5,
+            shadowRadius: 2,
+            elevation: 2,
+            borderRadius:5
         },
         image:{
             width:Math.round(Dimensions.get('window').width)*0.47,
