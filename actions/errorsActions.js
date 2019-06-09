@@ -8,8 +8,6 @@ export const CLEAR_ERROR ="CLEAR_ERROR";
 
 export const addError = error => {
     return (dispatch,getState) =>{
-        console.log(error)
-        console.log(error.response)
         const errors = getState().errors
     if(error.response)
     {    if(error.response.status === 401)

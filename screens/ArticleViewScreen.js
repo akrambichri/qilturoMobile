@@ -1,11 +1,15 @@
 import React from 'react'
-import {View, Image, StyleSheet, ScrollView,StatusBar,Text,TouchableOpacity } from "react-native"
+import {View, Image, StyleSheet, ScrollView,StatusBar,Text,Platform,TouchableOpacity,TouchableHighlight,Dimensions } from "react-native"
 import {Tabs, Tab, TabHeading} from "native-base"
 import { TabView,TabBar,  } from 'react-native-tab-view';
 import {fetchOne} from "../actions/articleActions"
+import {exportKindle,fetchProfile} from "../actions/userActions"
+import {addError} from "../actions/errorsActions"
 import {connect} from "react-redux"
-import { Audio,SecureStore } from 'expo';
+import { Audio,SecureStore,Video, Icon } from 'expo';
+import VideoPlayer from 'expo-video-player'
 import {API_URL} from "../api"
+
 
 class ArticleViewScreen extends React.Component {
     componentDidMount(){
@@ -13,16 +17,17 @@ class ArticleViewScreen extends React.Component {
       const article_id = this.props.navigation.getParam("article_id");
       if(article_id)
         this.props.fetchOne(article_id)
+      if(!this.props.profile)
+       this.props.fetchProfile()
+      const token = SecureStore.getItemAsync("token")
+      token.then(token => this.setState({token:token}))
     }
     componentWillUnmount(){
       console.log("ArticleViewScreen unmounting...")
     }
     state = {
-        index: 0,
-        routes: [
-          { key: 'first', title: 'Summary' },
-          { key: 'second', title: 'WITF' },
-        ],
+        token:"",
+        showVideo:false
       };
       
       static navigationOptions = ({ navigation }) => {
@@ -54,9 +59,16 @@ class ArticleViewScreen extends React.Component {
       }
       }
 
-      handleRead = () => {
-        this.props.navigation.navigate("Reading",{article_id:article.id})
+      handlekindle =() => {
+        const article_id = this.props.navigation.getParam("article_id");
+        if(this.props.profile&&this.props.profile.kindle_email!="")
+          this.props.exportKindle(article_id)
+        else{
+          this.props.navigation.navigate("Profile")
+          this.props.addError("veillez ajouter un email kindle!")
+        }
       }
+
     render(){
     let {article,authors} = this.props;
     
@@ -68,7 +80,28 @@ class ArticleViewScreen extends React.Component {
       if(authors && article)
        auteur = authors.filter(aut => aut.id === article.auteur_id)[0]
     return (
-        <ScrollView>
+      <>
+      {this.state.showVideo &&
+          <View style={styles.videContainer} >
+          
+          <Video
+            source={{ uri: 'http://techslides.com/demos/sample-videos/small.mp4' }}
+            rate={1.0}
+            volume={1.0}
+            isMuted={false}
+            resizeMode="cover"
+            shouldPlay
+            isLooping
+            style={{ width: 300, height: 300,zIndex:6 }}
+            useNativeControls
+           />
+           <TouchableHighlight onPress={() => this.setState({showVideo:false})}>
+             <Text style={{color:"#fff",zIndex:6,marginTop:20,fontSize:26}}>Close</Text>
+           </TouchableHighlight>
+            </View>
+         }
+        <ScrollView style={{paddingBottom:20}}>
+          
         <View style={styles.imgContainer}>
             <Image style={styles.image} source={{uri : "http://lorempixel.com/150/150/"} }/>
         </View>
@@ -77,18 +110,26 @@ class ArticleViewScreen extends React.Component {
             <Text style={styles.articleInfoTitle}>{article.book_name}</Text>
         </View>
         <View style={styles.actionsContainer}>
-        <TouchableOpacity rounded style={{...styles.btn,...styles.btnRadLeft}} onPress={()=> this.handleAudio()}  >
-        <Image style={{height:13,marginRight:5}} source={require("../assets/images/listen.png")}/>
-            <Text style={{textAlign:"center",color:"white"}}>
-              Listen
-            </Text>
+        {this.props.profile && this.props.profile.roles.filter(x=> x.name!=="free" && x.name!=="Free").length > 0 &&
+        <>
+        <TouchableOpacity rounded style={styles.roundBtn} onPress={()=> this.handleAudio()}  >
+            <Image style={{height:19,marginRight:5}} source={require("../assets/images/listen.png")}/>
+        </TouchableOpacity>
+          <TouchableOpacity rounded style={styles.roundBtn} onPress={()=> this.setState({showVideo:!this.state.showVideo})}  >
+          <Icon.Ionicons name={Platform === "ios"? "ios-play-circle":"md-play-circle"} color="white" style={{height:19}} />
+            
           </TouchableOpacity>
-          <TouchableOpacity rounded style={{...styles.btn,...styles.btnRadRight}} onPress={()=>  this.props.navigation.navigate("Reading",{article_id:article.id})}  >
+          </>
+        }
+          <TouchableOpacity rounded style={styles.btn} onPress={()=>  this.props.navigation.navigate("Reading",{article_id:article.id})}  >
            <Image style={{height:13,marginRight:5}} source={require("../assets/images/read.png")}/>
-            <Text style={{textAlign:"center",color:"#0854B3"}}>
+            <Text style={{textAlign:"center",color:"#fff"}}>
               Read
             </Text>
           </TouchableOpacity>
+          <TouchableHighlight style={{width:"45%",}} onPress={this.handlekindle}>
+          <Text style={{color:"#FFAE42",fontSize:18,textAlign:"center"}}>Kindle</Text>
+        </TouchableHighlight>
         </View>
         <Tabs tabContainerStyle={{backgroundColor:"#fff",borderRadius:25}}
               tabBarUnderlineStyle={{width:0}}>
@@ -112,6 +153,7 @@ class ArticleViewScreen extends React.Component {
           </Tab>
         </Tabs>
         </ScrollView>
+        </>
     )
   }
     }
@@ -129,6 +171,35 @@ const SecondRoute = (props) => (
   );
 
 const styles = StyleSheet.create({
+  roundBtn:{
+    backgroundColor:"#043578",
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.8,
+        shadowRadius: 2,  
+        elevation: 5,
+        width:50,
+        height: 53.67,
+        flexDirection:"row",
+        textAlign: 'center',
+        alignItems:"center",
+        justifyContent: 'center',
+        marginVertical:20,
+        borderRadius:25
+  },
+  videContainer:{
+    ...StyleSheet.absoluteFill,
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.3)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex:5,
+  },
+  video:{
+    marginTop:"auto",
+    marginBottom:"auto",
+    height:500,
+  },
   tabs:{
     borderColor:"#043578",
     borderWidth:1,
@@ -202,13 +273,14 @@ activeTextStyle:{
         shadowOpacity: 0.8,
         shadowRadius: 2,  
         elevation: 5,
-        width:140.35,
+        width:"45%",
         height: 53.67,
         flexDirection:"row",
         textAlign: 'center',
         alignItems:"center",
         justifyContent: 'center',
         marginVertical:20,
+        borderRadius:25
       },
       btnRadLeft:{
         
@@ -223,8 +295,10 @@ activeTextStyle:{
         borderColor:"#0854B3",
       },
       actionsContainer:{
+        marginBottom:15,
         padding:5,
         flexDirection:"row",
+        flexWrap:"wrap",
         justifyContent:"center"
       },
       icon:{
@@ -244,7 +318,8 @@ activeTextStyle:{
 const mapStateToProps = state => {
   return {
     article:state.articles.show,
-    authors:state.articles.authors
+    authors:state.articles.authors,
+    profile:state.user.profile
   }
 }
-export default connect(mapStateToProps,{fetchOne})(ArticleViewScreen)
+export default connect(mapStateToProps,{fetchOne,exportKindle,addError,fetchProfile})(ArticleViewScreen)

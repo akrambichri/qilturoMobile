@@ -13,7 +13,7 @@ export class SubscriptionScreen extends Component {
         mexp:"",
         yexp:"",
         cvc:"",
-        plan_id:0,
+        plan_id:1,
         finish:false,
     }
     componentDidMount(){
@@ -32,6 +32,7 @@ export class SubscriptionScreen extends Component {
 
         const apiKey="pk_test_QZoYkfIegj1tcC2BbvO8qXwf"
         const client = new Stripe(apiKey);
+        let {cvc,cc,mexp,yexp} = this.state
         const token = await client.createToken({
             number: this.state.cc ,
             exp_month: this.state.mexp , 
@@ -46,10 +47,47 @@ export class SubscriptionScreen extends Component {
           )
           return;
         }
+        console.log(token)
         this.props.subscribe(this.state.plan_id,token.id)
         this.setState({finish:true})
         this.setState({modalVisible:false})
     } 
+    handleCCChange = text => {
+      const pattern = /^[0-9]*$/
+      if(!pattern.test(text))
+        return;
+      
+      if(text.length>16)
+        return;
+      this.setState({cc:text})  
+    }
+    handleCVCChange = text => {
+      const pattern = /^[0-9]*$/
+      if(!pattern.test(text))
+        return;
+      
+      if(text.length>4)
+        return;
+      this.setState({cvc:text})  
+    }
+    handlemexpChange = text => {
+      const pattern = /^[0-9]*$/
+      if(!pattern.test(text))
+        return;
+      
+      if(text.length>2)
+        return;
+      this.setState({mexp:text})  
+    }
+    handleyexpChange = text => {
+      const pattern = /^[0-9]*$/
+      if(!pattern.test(text))
+        return;
+      
+      if(text.length>2)
+        return;
+      this.setState({yexp:text})  
+    }
     render() {
         const {plans,success} = this.props
          if(this.state.finish &&  success !== undefined){
@@ -70,29 +108,30 @@ export class SubscriptionScreen extends Component {
           visible={this.state.modalVisible}
           onRequestClose={() => {
             Alert.alert('Modal has been closed.');
+            this.setState({modalVisible:false})
           }}>
           <View style={{marginTop: 22}}>
             <View style={styles.paimentcontainer}>
               <Image style={{height:92,margin:15}} source={require("../assets/images/CC.png")}/>
               <Form style={{margin:"5%",width:"90%"}}>
             <Item floatingLabel>
-              <Label>CC Number</Label>
-              <Input keyboardType="numeric" onChangeText={(text) => this.setState({cc:text})}/>
+              <Label>CC Numberx</Label>
+              <Input keyboardType="numeric" value={this.state.cc} onChangeText={(text)=>this.handleCCChange(text)}/>
             </Item>
           <View style={{flexDirection:"row",width:300}}>
              <Item floatingLabel  style={{width:"45%"}}>
               <Label>month Exp</Label>
-              <Input keyboardType="numeric" onChangeText={(text) => this.setState({mexp:text})} />
+              <Input keyboardType="numeric" value={this.state.mexp} onChangeText={this.handlemexpChange} />
             </Item>
             <Item floatingLabel  style={{width:"45%"}} last>
               <Label>Year EXP</Label>
-              <Input keyboardType="numeric"  onChangeText={(text) => this.setState({yexp:text})} />
+              <Input keyboardType="numeric" value={this.state.yexp} onChangeText={this.handleyexpChange} />
             </Item>
           </View>
            
             <Item floatingLabel>
               <Label>CVC</Label>
-              <Input keyboardType="numeric" onChangeText={(text) => this.setState({cvc:text})}  />
+              <Input keyboardType="numeric" value={this.state.cvc} onChangeText={this.handleCVCChange}  />
             </Item>
             </Form>
           <View style={styles.paiementActions}>
@@ -117,15 +156,15 @@ export class SubscriptionScreen extends Component {
                 <Tabs
                      tabContainerStyle={styles.tabsContainer} 
                      tabBarUnderlineStyle={styles.tabBarUnderlineStyle} 
-                     onChangeTab={(ob) => this.setState({plan_id:ob.i})}
+                     onChangeTab={(ob) => this.setState({plan_id:ob.i+1})}
                 >
-                    {plans&& plans.map((plan,i) => 
+                    {plans&& plans.filter(x=> x.name !== "free" && x.name !== "Free").map((plan,i) => 
                     <Tab 
                     key={i}
                     heading={plan.name}
                     textStyle={styles.textStyle}
-                    activeTabStyle={i=== 0 && [styles.activeTabStyle,styles.borderLeft] || i ===plans.length-1 &&[styles.activeTabStyle,styles.borderRight] || styles.activeTabStyle }
-                    tabStyle={i=== 0 && [styles.tab,styles.borderLeft] || i ===plans.length-1 &&[styles.tab,styles.borderRight] || styles.tab }
+                    activeTabStyle={i=== 0 && [styles.activeTabStyle,styles.borderLeft] || i ===plans.length-2 &&[styles.activeTabStyle,styles.borderRight] || styles.activeTabStyle }
+                    tabStyle={i=== 0 && [styles.tab,styles.borderLeft] || i ===plans.length-2 &&[styles.tab,styles.borderRight] || styles.tab }
                     activeTextStyle={styles.activeTextStyle}
                     >
                         <Plan plan={plan}  />

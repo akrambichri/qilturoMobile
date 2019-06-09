@@ -42,9 +42,18 @@ export class ReadingScreen extends Component {
         return (
             <View style={{width:"100%",height:"100%"}}>
             <ScrollView style={this.state.nightMode?{...styles.container,backgroundColor:"#0854B3"}:styles.container}>
+               <View style={{flexDirection:"row",justifyContent:"space-between"}}>
                 <Text style={this.state.nightMode?{...styles.title,color:"#fff"}:styles.title}>
                  {reading.title}
                 </Text>
+                <TouchableOpacity style={{flex:1,marginLeft:"auto"}} onPress={() => this.setState({showToolbox:!this.state.showToolbox})}>
+                        <Icon.Ionicons
+                            name={Platform.OS === 'ios' ? 'ios-menu' : 'md-menu'}
+                            size={30}
+                            color="#000"
+                        /> 
+                    </TouchableOpacity>
+                </View>
                 <Text 
                 selectable={true}  
                 style={this.state.nightMode?{fontSize:this.state.fontSize,color:"#fff"}:{fontSize:this.state.fontSize}}
@@ -54,15 +63,8 @@ export class ReadingScreen extends Component {
                  
                 
             </ScrollView>
+            {this.state.showToolbox &&
             <View style={styles.toolBox}>
-                    <TouchableOpacity style={styles.action} onPress={() => this.setState({showToolbox:!this.state.showToolbox})}>
-                        <Icon.Ionicons
-                            name={Platform.OS === 'ios' ? 'ios-arrow-forward' : 'md-arrow-forward'}
-                            size={18}
-                            style={styles.actionImg}
-                            color="#043578"
-                        /> 
-                    </TouchableOpacity>
                    
                     <TouchableOpacity style={styles.action} onPress={()=>this.setState({showHeaders:!this.state.showHeaders})} >
                         <Image style={styles.actionImg} source={require("../assets/images/titles.png")}/>
@@ -73,7 +75,7 @@ export class ReadingScreen extends Component {
                     <TouchableOpacity style={styles.action} onPress={() => {let font = this.state.fontSize; this.setState({fontSize:font === 26 ? 20:font+3})} } >
                         <Image style={styles.actionImg} source={require("../assets/images/fontSize.png")}/>
                     </TouchableOpacity>           
-                </View>
+                </View>}
                 {this.state.showHeaders &&
                 <View style ={styles.headersContainer} onPress={()=> console.log("xx")}>
                     <View style={styles.headers}>
@@ -119,7 +121,8 @@ const styles = StyleSheet.create({
         fontSize:21,
         fontWeight:"800",
         marginBottom:10,
-        textAlign:"center"
+        textAlign:"center",
+        flex:5
     },
     body:{
   

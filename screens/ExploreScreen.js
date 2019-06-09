@@ -32,6 +32,7 @@ export class ExploreScreen extends Component {
         let auteur;
         if(authors && selected)
         auteur = authors.filter(aut => aut.id === selected.auteur_id)[0]
+      
         return (
             <ScrollView>
                 <Text style={styles.header}>Les Categories</Text>
@@ -53,7 +54,7 @@ export class ExploreScreen extends Component {
                 <View style={styles.featuredInfos}>
                     <Text >LE COUP DE COEUR DE LA SMAINE</Text>
                     <Text style={styles.featuredTitle}>{selected.book_name}</Text>
-                    <Text style={styles.featuredAuteur}>{auteur&& auteur.name || "auteur introuvable !"}</Text>
+                    <Text style={styles.featuredAuteur}>{auteur && auteur.auteur || "auteur introuvable !"}</Text>
                     <TouchableOpacity style={styles.btnFeatured} onPress={() => this.props.navigation.navigate("Article",{article_id:selected.id,name:selected.book_name})} >
                         <Text style={styles.btnFeaturedText} >Decouvrir</Text>
                     </TouchableOpacity>

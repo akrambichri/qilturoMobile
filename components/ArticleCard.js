@@ -1,7 +1,8 @@
 import React from 'react'
 import {Image,  TouchableOpacity, StyleSheet, View, Text} from "react-native"
 import {connect} from "react-redux"
-import { addArticleBiblio,removeArticleBiblio,fetchBiblio } from '../actions/userActions';
+import { addArticleBiblio,removeArticleBiblio,fetchBiblio,fetchProfile } from '../actions/userActions';
+import {addError} from "../actions/errorsActions"
 
 class ArticleCard extends React.Component {
     componentDidMount(){
@@ -9,7 +10,30 @@ class ArticleCard extends React.Component {
         if(!biblio || biblio.length === 0){
             this.props.fetchBiblio()
         }
+        if(!this.props.profile)
+         this.props.fetchProfile()
         
+    }
+    handleAddToBiblio =() => {
+        const {article,biblio,profile} = this.props;
+        let isInBiblio = biblio.filter(book => book.id ===  article.id).length>0;
+        const isUserFree = profile.roles.filter(x=> x.name ==="free" || x.name==="Free").length !== 0 
+        const isArticleFree = article.free
+        if(isInBiblio)
+        { 
+            this.props.removeArticleBiblio(article.id)
+            return
+        }
+         if(isUserFree && !isArticleFree){
+             this.props.addError("Article n'est pas Gratuit!, Abonnez vous!")
+             return
+         }
+         if(isUserFree && biblio.length >1){
+            this.props.addError("Maximum d'article que vous pouvez avoir est 2, Abonnez vous!")
+            return
+         }
+
+       this.props.addArticleBiblio(article.id)
     }
     render(){
     const {article,biblio, authors} = this.props;
@@ -28,7 +52,7 @@ class ArticleCard extends React.Component {
                     <Text style={styles.description}>{article.description}</Text>
                     <View style={styles.textFooter}>
                     <Text style={styles.author}>{auteur?auteur.auteur:"..."}</Text>
-                    <TouchableOpacity onPress={() =>isInBiblio?this.props.removeArticleBiblio(article.id):this.props.addArticleBiblio(article.id)}>
+                    <TouchableOpacity onPress={this.handleAddToBiblio}>
                         <Image source={isInBiblio?require("../assets/images/remove.png"):require("../assets/images/add.png")} style={styles.addButton}/>
                     </TouchableOpacity>
                     </View>
@@ -96,7 +120,8 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => {
     return {
         biblio:state.user.biblio,
+        profile:state.user.profile,
         authors:state.articles.authors
     }
 }
-export default connect(mapStateToProps,{ addArticleBiblio,removeArticleBiblio,fetchBiblio })(ArticleCard)
+export default connect(mapStateToProps,{ addArticleBiblio,removeArticleBiblio,fetchBiblio,fetchProfile,addError })(ArticleCard)

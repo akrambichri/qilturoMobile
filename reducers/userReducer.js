@@ -63,10 +63,10 @@ export default (state = USER_INIT , {type,payload}) => {
         case  FETCH_BIBLIO_USER:
             return {...state,biblio:[...payload],loading:false}
         case ADD_ARTICLE_BIBLIO_USER:
-            return {...state,biblio:[...state.biblio, payload]}
+            return {...state,biblio:[...state.biblio, {...payload,info:{finished:0}}],loading:false}
 
         case REMOVE_ARTICLE_BIBLIO_USER :
-            return {...state,biblio:state.biblio.filter(book => book.id !== payload)}
+            return {...state,biblio:state.biblio.filter(book => book.id !== payload),loading:false}
         case FAILED_REQUEST_USER:
             return {...state,loading:false}
         case SUBSCRIPTION_SUCCESS :

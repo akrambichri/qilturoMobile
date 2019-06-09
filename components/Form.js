@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import {View, Button,  StyleSheet, TextInput} from "react-native"
-import {changeEmail,changePass} from "../actions/userActions"
+import {changeEmail,changePass,setKindle,setEverNote} from "../actions/userActions"
 import {connect} from "react-redux"
 
 export class Form extends Component{
@@ -24,6 +24,10 @@ export class Form extends Component{
             this.props.changePass(oldPass,elementV)
         else if(element ==="email")
             this.props.changeEmail(oldPass,elementV)
+        else if(element ==="kindle")
+        this.props.setKindle(elementV)
+        else if(element ==="evernote")
+            this.props.setEverNote(elementV)
         this.props.hide()
 
     }
@@ -80,4 +84,4 @@ const styles=StyleSheet.create({
 })
 
 
-export default connect(null,{changeEmail,changePass})(Form)
+export default connect(null,{changeEmail,changePass,setKindle,setEverNote})(Form)

@@ -24,6 +24,23 @@ class Messages extends Component {
           })
           }
 
+          {messages.map((msg,i) => 
+            {
+              Alert.alert(
+                "Infos",
+                msg,
+                 [
+                   {
+                    text:"ok",
+                    onPress: () => this.props.removeMsg(i),
+                    style: 'ok',
+                   }
+                 ]
+              )
+             
+            })
+            }
+
       return null
   }
 }

@@ -3,7 +3,8 @@ import { connect } from 'react-redux'
 import { Container, Header, Content,Toast , Form, Item, Icon, Input,Text,Button } from 'native-base';
 import {loginUser} from "../actions/userActions"
 import {StyleSheet, Image,View, TouchableOpacity} from "react-native"
-import Messages from "../HOCs/Messages"
+import { Facebook,Google } from 'expo';
+
 
 export class LoginScreen extends Component {
     state ={
@@ -52,11 +53,43 @@ export class LoginScreen extends Component {
         this.props.loginUser(email,password)
         this.setState({password:""})
     }
+
+    handleFbLogin = async () => {
+      const FB_APP_ID = "2183698665279759";
+      try {
+        const {
+          type,
+          token,
+        } = await Facebook.logInWithReadPermissionsAsync(FB_APP_ID, {
+          permissions: ['profile'],
+        });
+        if (type === 'success') {
+          // Get the user's name using Facebook's Graph API
+          const response = await fetch(`https://graph.facebook.com/me?access_token=${token}`);
+          Alert.alert('Logged in!', `Hi ${(await response.json()).name}!`);
+        } else {
+          // type === 'cancel'
+        }
+      } catch ({ message }) {
+        alert(`Facebook Login Error: ${message}`);
+      }
+    }
+    handleGoogleLogin = async () => {
+      const clientId = '497115443806-9ig03cj3jnvs6bfbc7ok1tltbd8qsiai.apps.googleusercontent.com';
+      const { type, accessToken, user } = await Google.logInAsync({ clientId });
+
+      if (type === 'success') {
+        /* `accessToken` is now valid and can be used to get data from the Google API with HTTP requests */
+        console.log(user);
+      }
+      else{
+        console.log("error");
+      }
+    }
     render() {
     
         return (
             <Container >
-              <Messages/>
             <Content style={styles.content}>
               <Form onSub style={styles.form}>
                 <Item error={this.state.emailError}  >
@@ -74,10 +107,10 @@ export class LoginScreen extends Component {
                    </Text>
                 </Button>
                   <View style={styles.socialButtons}>
-                  <TouchableOpacity>
+                  <TouchableOpacity onPress={this.handleFbLogin}>
                       <Image source={require( "../assets/images/fb.png")}/>
                   </TouchableOpacity>
-                  <TouchableOpacity>
+                  <TouchableOpacity onPress={this.handleGoogleLogin}>
                       <Image source={require( "../assets/images/google.png")}/>
                   </TouchableOpacity>
                   </View>

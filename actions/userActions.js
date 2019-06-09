@@ -570,7 +570,9 @@ export const changePass= (oldpassword,password) => {
                 type:CHANGE_PASSWORD_USER,
             })
             dispatch(addError({data:"password changed successfully"}))
-        }).catch(err => {dispatch(addError(err))
+        }).catch(err => {
+     
+            dispatch(addError("password Incorrecte!"))
             dispatch({type:FAILED_REQUEST_USER})})
     }
 }
@@ -592,7 +594,8 @@ export const demandeResetPass= (email) => {
                 type:DEMADNE_PASSWORD_RESET_USER,
             })
             dispatch(addError({data:"un email vous a ete envoye!"}))
-        }).catch(err => {dispatch(addError(err))
+        }).catch(err => {
+            dispatch(addError(err))
             dispatch({type:FAILED_REQUEST_USER})})
     }
 }
@@ -889,8 +892,9 @@ export const setReadDuration = (duration, article_id, token = SecureStore.getIte
 
 export const EXPORT_KINDLE_EMAIL ="EXPORT_KINDLE_EMAIL"
 
-export const exportKindle = (article_id, token = SecureStore.getItemAsync("token")) => {
+export const exportKindle = (article_id) => {
     return async dispatch => {
+        const token = SecureStore.getItemAsync("token")
         await Api.get("article/sendkindle/"+article_id,
         {
             params:{
@@ -898,7 +902,9 @@ export const exportKindle = (article_id, token = SecureStore.getItemAsync("token
             }
         }).then(resp => {
             dispatch({type:EXPORT_KINDLE_EMAIL,})
-            dispatch(addError("Envoi avec Succes !"))
+            dispatch(addMsg("Envoi avec Succes !"))
+        }).catch(err => {
+            dispatch(addError("Envoi a echouer!"))
         })
     }
 } 
@@ -906,8 +912,9 @@ export const exportKindle = (article_id, token = SecureStore.getItemAsync("token
 
 export const SET_KINDLE_EMAIL ="SET_KINDLE_EMAIL"
 
-export const setKindle = (kindle_email, token = SecureStore.getItemAsync("token")) => {
+export const setKindle = (kindle_email) => {
     return async dispatch => {
+        const token = await SecureStore.getItemAsync("token")
         await Api.post("users/profile",
         {
         
@@ -923,8 +930,9 @@ export const setKindle = (kindle_email, token = SecureStore.getItemAsync("token"
 
 export const SET_EVERNOTE_EMAIL ="SET_EVERNOTE_EMAIL"
 
-export const setEverNote = (evernote_email, token = SecureStore.getItemAsync("token")) => {
+export const setEverNote = (evernote_email) => {
     return async dispatch => {
+        const token =  await SecureStore.getItemAsync("token")
         await Api.post("users/profile",
         {
         
