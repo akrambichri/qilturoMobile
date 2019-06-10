@@ -132,7 +132,7 @@ class ArticleViewScreen extends React.Component {
         </TouchableHighlight>
         </View>
         <Tabs tabContainerStyle={{backgroundColor:"#fff",borderRadius:25}}
-              tabBarUnderlineStyle={{width:0}}>
+              tabBarUnderlineStyle={{width:0,height:0}}>
           <Tab 
           activeTabStyle={{...styles.activeTabStyle,...styles.borderLeft}}
           tabStyle={{...styles.tab,...styles.borderLeft}}
