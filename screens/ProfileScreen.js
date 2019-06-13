@@ -41,7 +41,7 @@ export class ProfileScreen extends Component {
                 <Option value={profile.email} element="email" >
                     E-mail
                 </Option>
-                <Option value={profile.name} >
+                <Option value={profile.name} element="name" >
                     Nom
                 </Option>
                 <Option value={"***********"}  element="password">

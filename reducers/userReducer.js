@@ -33,7 +33,8 @@ import {
     UNPARTICIPATE_EVENT_USER,
     SET_KINDLE_EMAIL,
     SET_EVERNOTE_EMAIL,
-    FAILED_SUBSCRIPTION
+    FAILED_SUBSCRIPTION,
+    CHANGE_NAME_USER
 
 } from "../actions/userActions"
 import { SecureStore } from 'expo';
@@ -94,6 +95,8 @@ export default (state = USER_INIT , {type,payload}) => {
             return {...state, profile:{...state.profile,email_verified_at:new Date()},loading:false}
         case CHANGE_EMAIL_USER:
             return {...state,profile:{...state.profile,email:payload,loading:false}}
+        case CHANGE_NAME_USER:
+                return {...state,profile:{...state.profile,name:payload,loading:false}}
         case CHANGE_PASSWORD_USER:
             return {...state,loading:false}
         case CANCEL_SUBS_USER:

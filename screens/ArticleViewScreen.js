@@ -109,18 +109,8 @@ class ArticleViewScreen extends React.Component {
             <Text style={styles.articleInfoAuthor}>{auteur&&auteur.auteur || "auteur introubable!"}</Text>
             <Text style={styles.articleInfoTitle}>{article.book_name}</Text>
         </View>
+        <View style={{flexDirection:"column"}}>
         <View style={styles.actionsContainer}>
-        {this.props.profile && this.props.profile.roles.filter(x=> x.name!=="free" && x.name!=="Free").length > 0 &&
-        <>
-        <TouchableOpacity rounded style={styles.roundBtn} onPress={()=> this.handleAudio()}  >
-            <Image style={{height:19,marginRight:5}} source={require("../assets/images/listen.png")}/>
-        </TouchableOpacity>
-          <TouchableOpacity rounded style={styles.roundBtn} onPress={()=> this.setState({showVideo:!this.state.showVideo})}  >
-          <Icon.Ionicons name={Platform === "ios"? "ios-play-circle":"md-play-circle"} color="white" style={{height:19}} />
-            
-          </TouchableOpacity>
-          </>
-        }
           <TouchableOpacity rounded style={styles.btn} onPress={()=>  this.props.navigation.navigate("Reading",{article_id:article.id})}  >
            <Image style={{height:13,marginRight:5}} source={require("../assets/images/read.png")}/>
             <Text style={{textAlign:"center",color:"#fff"}}>
@@ -128,11 +118,22 @@ class ArticleViewScreen extends React.Component {
             </Text>
           </TouchableOpacity>
           <TouchableHighlight style={{width:"45%",}} onPress={this.handlekindle}>
-          <Text style={{color:"#FFAE42",fontSize:18,textAlign:"center"}}>Kindle</Text>
+          <Text style={{color:"#FFAE42",fontSize:18,textAlign:"center",marginTop:"auto",marginBottom:"auto"}}>Kindle</Text>
         </TouchableHighlight>
         </View>
+        {this.props.profile && this.props.profile.roles.filter(x=> x.name!=="free" && x.name!=="Free").length > 0 &&
+        <View style={styles.actionsContainer}>
+        <TouchableOpacity rounded style={styles.roundBtn} onPress={()=> this.handleAudio()}  >
+            <Image style={{height:19,marginRight:5}} source={require("../assets/images/listen.png")}/>
+        </TouchableOpacity>
+          <TouchableOpacity rounded style={styles.roundBtn} onPress={()=> this.setState({showVideo:!this.state.showVideo})}  >
+             <Icon.Ionicons name={Platform === "ios"? "ios-play-circle":"md-play-circle"} color="white" style={{height:26}} />
+          </TouchableOpacity>
+          </View>
+        }
+        </View>
         <Tabs tabContainerStyle={{backgroundColor:"#fff",borderRadius:25}}
-              tabBarUnderlineStyle={{width:0,height:0}}>
+              tabBarUnderlineStyle={{width:0,height:0,display:"none"}}>
           <Tab 
           activeTabStyle={{...styles.activeTabStyle,...styles.borderLeft}}
           tabStyle={{...styles.tab,...styles.borderLeft}}
@@ -246,7 +247,7 @@ activeTextStyle:{
     image:{
         position:"absolute",
        ...StyleSheet.absoluteFill,
-        left:89,
+        left:Dimensions.get("screen").width/2 - 178/2,
         top:30,
         width:178,
         height:200,

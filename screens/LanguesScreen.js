@@ -11,7 +11,7 @@ export class LanguesScreen extends Component {
                 <Text>Choisir la langue de l'application</Text>
                 <Picker
                 selectedValue={this.state.language}
-                style={{height: 50, width: "100%"}}
+                style={{height: 50, width: "100%",zIndex:5}}
                 onValueChange={(itemValue, itemIndex) =>
                 this.setState({language: itemValue})
                 }>

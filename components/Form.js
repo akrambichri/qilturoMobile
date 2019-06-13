@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import {View, Button,  StyleSheet, TextInput} from "react-native"
-import {changeEmail,changePass,setKindle,setEverNote} from "../actions/userActions"
+import {changeEmail,changePass,setKindle,setEverNote,changeName} from "../actions/userActions"
+import {addError} from "../actions/errorsActions"
 import {connect} from "react-redux"
 
 export class Form extends Component{
@@ -15,11 +16,14 @@ export class Form extends Component{
         const oldPass = this.state.oldPass;
         const elementV = this.state.element
         const elementVconf = this.state.element_confirmation
-        console.log(oldPass,elementV,elementVconf)
-        if(oldPass<6)
-            return
+        if(oldPass.length<6)
+        { 
+          this.props.addError("mdp courts! ")
+          return}
         if(elementV !== elementVconf )
-            return
+        { 
+          this.props.addError("valeurs saisies sont differentes!")
+          return}
         if(element === "password")
             this.props.changePass(oldPass,elementV)
         else if(element ==="email")
@@ -28,6 +32,8 @@ export class Form extends Component{
         this.props.setKindle(elementV)
         else if(element ==="evernote")
             this.props.setEverNote(elementV)
+        else if(element ==="name")
+            this.props.changeName(oldPass,elementV)
         this.props.hide()
 
     }
@@ -60,7 +66,7 @@ export class Form extends Component{
         <Button 
           onPress={() => this.handleSubmit()}
           color="rgba(8, 84, 179, 1)"
-          title="OK PRESS"
+          title="Modifier"
         />
     </View>
   )}
@@ -84,4 +90,4 @@ const styles=StyleSheet.create({
 })
 
 
-export default connect(null,{changeEmail,changePass,setKindle,setEverNote})(Form)
+export default connect(null,{changeEmail,changePass,setKindle,setEverNote,changeName,addError})(Form)

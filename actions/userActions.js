@@ -276,7 +276,7 @@ export const subscribe = (planID,stripeToken) => {
             
             
         }).catch( err => {
-           
+            console.log(err,err.reponse,err.status)
             dispatch({type:FAILED_SUBSCRIPTION,})
         })
     }
@@ -546,7 +546,32 @@ export const changeEmail= (oldpassword,email) => {
                 type:CHANGE_EMAIL_USER,
                 payload:resp.data.email
             })
-            dispatch(addError({data:"Email changed successfully"}))
+            dispatch(addMsg("Email changed successfully"))
+        }).catch(err => {dispatch(addError(err))
+            dispatch({type:FAILED_REQUEST_USER})})
+    }
+}
+
+export const CHANGE_NAME_USER ="CHANGE_NAME_USER"
+
+export const changeName= (oldpassword,name) => {
+
+    return async dispatch => {
+        const token = await SecureStore.getItemAsync("token")
+        dispatch({type:ATTEMPT_REQUEST_USER})
+        await Api.post("/users/profile",
+        {
+            name,
+            token,
+            oldpassword,
+            password_validation:oldpassword
+        })
+        .then(resp => {
+            dispatch({
+                type:CHANGE_NAME_USER,
+                payload:name
+            })
+            dispatch(addMsg("Name changed successfully"))
         }).catch(err => {dispatch(addError(err))
             dispatch({type:FAILED_REQUEST_USER})})
     }
@@ -569,7 +594,7 @@ export const changePass= (oldpassword,password) => {
             dispatch({
                 type:CHANGE_PASSWORD_USER,
             })
-            dispatch(addError({data:"password changed successfully"}))
+            dispatch(addMsg("password changed successfully"))
         }).catch(err => {
      
             dispatch(addError("password Incorrecte!"))
