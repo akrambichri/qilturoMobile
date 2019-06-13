@@ -26,7 +26,18 @@ export class ReadingScreen extends Component {
         nightMode:false,
         fontSize:this.fontSizes[0],
     }
-  
+    handleaddNote = ({ eventType, content, selectionStart, selectionEnd }) => {
+        const id = this.props.navigation.getParam("article_id");
+        console.log(eventType,content)
+            switch(eventType){
+                case "add note":
+                    this.props.addNote(id,content)
+                    return
+                default :
+                    console.log("no eventType")
+                    return
+            }
+    }
     render() {
         let {reading} = this.props;
         let fin = false;

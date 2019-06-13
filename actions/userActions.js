@@ -398,11 +398,11 @@ export const getPreviousPage = (article_id) => {
 }
 
 export const GET_AUDIO = "GET_AUDIO"
-export const getAudio = (article_id,token = SecureStore.getItemAsync("token")) => {
+export const getAudio = (article_id) => {
 
     return async dispatch => {
         dispatch({type:ATTEMPT_REQUEST_USER})
-    
+        const token = await SecureStore.getItemAsync("token");
         await Api.post("articles/getaudio/"+article_id,
         {
             
@@ -421,11 +421,11 @@ export const getAudio = (article_id,token = SecureStore.getItemAsync("token")) =
     }
 }
 export const GET_VIDEO = "GET_VIDEO"
-export const getVideo = (article_id,token = SecureStore.getItemAsync("token")) => {
+export const getVideo = (article_id) => {
 
     return async dispatch => {
         dispatch({type:ATTEMPT_REQUEST_USER})
-    
+        const token = await SecureStore.getItemAsync("token");
         await Api.post("articles/getvideo/"+article_id,
         {
             
@@ -452,10 +452,10 @@ export const clearReading = () => {
         }
 }
 
-export const addNote = (text_id,note_content,token=SecureStore.getItemAsync("token")) =>{
+export const addNote = (text_id,note_content) =>{
 
     return async dispatch => {
-        
+        const token = await SecureStore.getItemAsync("token");
       await Api.post("users/notes",{
             token,
             text_id,
