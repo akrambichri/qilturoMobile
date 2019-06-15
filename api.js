@@ -1,5 +1,5 @@
 import axios from 'axios';
-export const API_URL="http://192.168.8.100:8000/api";
+export const API_URL="https://batech.me/api/";
 
 export default axios.create({
   baseURL: API_URL,

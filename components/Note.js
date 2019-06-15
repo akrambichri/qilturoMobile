@@ -3,6 +3,7 @@ import { View,StyleSheet, Text, TouchableOpacity, Image,Dimensions } from "react
 
 export class Note extends Component {
     render() {
+        const {note}=this.props
         return (
             <View style={styles.container}>
                 <View style={styles.header}>
@@ -20,7 +21,7 @@ export class Note extends Component {
                                 source={require("../assets/images/copy.png")}
                             />
                         </TouchableOpacity>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={()=> this.props.deleteNote(note.id)}>
                             <Image
                                 style={styles.actionImg}
                                 source={require("../assets/images/delete.png")}
@@ -28,7 +29,7 @@ export class Note extends Component {
                         </TouchableOpacity>
                     </View>
                 </View>
-                <Text style={styles.text}> Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum. when an unknown printer took a galley of type and scrambled it to make a type specimen book.</Text>
+                <Text style={styles.text}>{note.text}</Text>
                 <Text style={styles.footerText}>1/2</Text>
             </View>
         )

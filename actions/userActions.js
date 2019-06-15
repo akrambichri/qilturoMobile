@@ -471,8 +471,9 @@ export const addNote = (text_id,note_content) =>{
 }
 
 export const FETCH_NOTES_USER ="FETCH_NOTES_USER"
-export const fetchNotes =(token =SecureStore.getItemAsync("token")) => {
+export const fetchNotes =() => {
     return async dispatch => {
+        const token = await SecureStore.getItemAsync("token")
         dispatch({type:ATTEMPT_REQUEST_USER})
         Api.defaults.headers.common['Authorization'] = "bearer " + token;
         await Api.get("users/notes")
@@ -488,9 +489,10 @@ export const fetchNotes =(token =SecureStore.getItemAsync("token")) => {
 
 export const DELETE_NOTE_USER ="DELETE_NOTE_USER"
 
-export const deleteNote = (text_id, note_id, token =SecureStore.getItemAsync("token")) =>{
+export const deleteNote = (text_id, note_id) =>{
     console.log(text_id + " " + note_id)
     return async dispatch => {
+        const token = await SecureStore.getItemAsync("token")
         dispatch({type:ATTEMPT_REQUEST_USER})
         Api.defaults.headers.common['Authorization'] = "bearer " + token;
         await Api.delete("users/notes",{
@@ -698,8 +700,9 @@ export const FETCH_BADGES_USER ="FETCH_BADGES_USER"
 
 export const fetchBadges = () => {
 
-    let token= SecureStore.getItemAsync("token")
+  
     return async dispatch => {
+        const token = await SecureStore.getItemAsync("token")
         await Api.get("/users/badges",
         {
            token
@@ -720,8 +723,8 @@ export const FETCH_INVOICES_USER ="FETCH_INVOICES_USER"
 
 export const fetchInvoices = () => {
 
-    let token= SecureStore.getItemAsync("token")
     return async dispatch => {
+        const token = await SecureStore.getItemAsync("token")
         await Api.get("/users/invoices",
         {
            token
@@ -740,9 +743,10 @@ export const fetchInvoices = () => {
 
 export const EDIT_CREDITCARD_USER ="EDIT_CREDITCARD_USER"
 
-export const editCreaditCard = (stripeToken,token=SecureStore.getItemAsync("token") ) => {
+export const editCreaditCard = (stripeToken) => {
 
     return async dispatch => {
+        const token = await SecureStore.getItemAsync("token")
         await Api.post("users/updatecard",
         {
            token,
@@ -763,9 +767,10 @@ export const editCreaditCard = (stripeToken,token=SecureStore.getItemAsync("toke
 
 export const FETCH_ALL_EVENTS ="FETCH_ALL_EVENTS"
 
-export const fetchEvents = (token=SecureStore.getItemAsync("token")) => {
+export const fetchEvents = () => {
 
     return async dispatch => {
+        const token = await SecureStore.getItemAsync("token")
         await Api.get("/events",
         {
            token,
@@ -783,8 +788,9 @@ export const fetchEvents = (token=SecureStore.getItemAsync("token")) => {
 
 export const PARTICIPATE_EVENT_USER ="PARTICIPATE_EVENT_USER"
 
-export const participatEvent = (event_id,token=SecureStore.getItemAsync("token") ) => {
+export const participatEvent = (event_id ) => {
     return async dispatch => {
+        const token = await SecureStore.getItemAsync("token")
         await Api.get("/users/participate",
         {
            params:{token,
@@ -804,9 +810,10 @@ export const participatEvent = (event_id,token=SecureStore.getItemAsync("token")
 }
 export const UNPARTICIPATE_EVENT_USER ="UNPARTICIPATE_EVENT_USER"
 
-export const unparticipatEvent = (event_id,token=SecureStore.getItemAsync("token") ) => {
+export const unparticipatEvent = (event_id ) => {
    
     return async dispatch => {
+        const token = await SecureStore.getItemAsync("token")
         await Api.get("users/unparticipate",
         {
            params:{
@@ -831,8 +838,9 @@ export const unparticipatEvent = (event_id,token=SecureStore.getItemAsync("token
 export const FETCH_PARTICIPATING_EVENTS_USER ="FETCH_PARTICIPATING_EVENTS_USER"
 
 
-export const fetchParticipatEvent = (token=SecureStore.getItemAsync("token") ) => {
+export const fetchParticipatEvent = ( ) => {
     return async dispatch => {
+        const token = await SecureStore.getItemAsync("token")
         await Api.get("users/participating",
         {
            token,
@@ -866,9 +874,9 @@ export const checkReff = refToken => {
 
 export const FETCH_LEVELS_USER ="FETCH_LEVELS_USER"
 
-export const fetchLevels = (token=SecureStore.getItemAsync("token")) => {
-
+export const fetchLevels = () => {
     return async dispatch => {
+        const token = await SecureStore.getItemAsync("token")
         await Api.get("/levels",{
             token
         }).then(resp => 
@@ -880,10 +888,11 @@ export const fetchLevels = (token=SecureStore.getItemAsync("token")) => {
 
 export const CREATE_EVENT_USER ="CREATE_EVENT_USER"
 
-export const createEvent = (event,token = SecureStore.getItemAsync("token")) => {
+export const createEvent = (event) => {
 
     const {e} = event;
     return async dispatch => {
+        const token = await SecureStore.getItemAsync("token")
         await Api.post("/events",
         {
             token,
